@@ -1,0 +1,7 @@
+
+Install-Package Microsoft.EntityFrameworkCore -version 6.0.29
+Install-Package Microsoft.EntityFrameworkCore.SqlServer -Version 6.0.0
+Install-Package Microsoft.EntityFrameworkCore.Tools -Version 6.0.29
+
+
+Scaffold-DbContext "Data Source=.;Initial Catalog=msistore;Integrated Security=True" Microsoft.EntityFrameworkCore.SqlServer -OutputDir Models -Force
