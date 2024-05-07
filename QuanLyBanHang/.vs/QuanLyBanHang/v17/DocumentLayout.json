@@ -3,12 +3,24 @@
   "WorkspaceRootPath": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\",
   "Documents": [
     {
-      "AbsoluteMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\DAL\\Models\\msistoreContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
-      "RelativeMoniker": "D:0:0:{A2FE74E1-B743-11D0-AE1A-00A0C90FFFC3}|\u003CMiscFiles\u003E|solutionrelative:DAL\\Models\\msistoreContext.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+      "AbsoluteMoniker": "D:0:0:{20A0F429-6243-4B20-B808-C35795B0F852}|BLL\\BLL.csproj|e:\\asp mvc\\msistore-aspmvc\\quanlybanhang\\bll\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{20A0F429-6243-4B20-B808-C35795B0F852}|BLL\\BLL.csproj|solutionrelative:bll\\categoryservice.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
     },
     {
-      "AbsoluteMoniker": "D:0:0:{DA58039C-B858-4B81-97E5-960BD2E45F56}|Solution Items{DA58039C-B858-4B81-97E5-960BD2E45F56}|E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\nuget.txt||{8B382828-6202-11D1-8870-0000F87579D2}",
-      "RelativeMoniker": "D:0:0:{DA58039C-B858-4B81-97E5-960BD2E45F56}|Solution Items{DA58039C-B858-4B81-97E5-960BD2E45F56}|solutionrelative:nuget.txt||{8B382828-6202-11D1-8870-0000F87579D2}"
+      "AbsoluteMoniker": "D:0:0:{66C24B16-D3EE-4629-B7E0-F4B540838843}|MSISTORE.WEB\\MSISTORE.WEB.csproj|e:\\asp mvc\\msistore-aspmvc\\quanlybanhang\\msistore.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66C24B16-D3EE-4629-B7E0-F4B540838843}|MSISTORE.WEB\\MSISTORE.WEB.csproj|solutionrelative:msistore.web\\program.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{66C24B16-D3EE-4629-B7E0-F4B540838843}|MSISTORE.WEB\\MSISTORE.WEB.csproj|e:\\asp mvc\\msistore-aspmvc\\quanlybanhang\\msistore.web\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{66C24B16-D3EE-4629-B7E0-F4B540838843}|MSISTORE.WEB\\MSISTORE.WEB.csproj|solutionrelative:msistore.web\\controllers\\categorycontroller.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{B465B809-3BD7-4B4B-81AD-393390B565F3}|DAL\\DAL.csproj|e:\\asp mvc\\msistore-aspmvc\\quanlybanhang\\dal\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}",
+      "RelativeMoniker": "D:0:0:{B465B809-3BD7-4B4B-81AD-393390B565F3}|DAL\\DAL.csproj|solutionrelative:dal\\categoryrepository.cs||{A6C744A8-0E4A-4FC6-886A-064283054674}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{20A0F429-6243-4B20-B808-C35795B0F852}|BLL\\BLL.csproj|e:\\asp mvc\\msistore-aspmvc\\quanlybanhang\\bll\\bll.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|",
+      "RelativeMoniker": "D:0:0:{20A0F429-6243-4B20-B808-C35795B0F852}|BLL\\BLL.csproj|solutionrelative:bll\\bll.csproj||{FA3CD31E-987B-443A-9B81-186104E8DAC1}|"
     }
   ],
   "DocumentGroupContainers": [
@@ -18,32 +30,71 @@
       "DocumentGroups": [
         {
           "DockedWidth": 200,
-          "SelectedChildIndex": 0,
+          "SelectedChildIndex": 3,
           "Children": [
             {
               "$type": "Document",
-              "DocumentIndex": 0,
-              "Title": "msistoreContext.cs",
-              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\DAL\\Models\\msistoreContext.cs",
-              "RelativeDocumentMoniker": "DAL\\Models\\msistoreContext.cs",
-              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\DAL\\Models\\msistoreContext.cs",
-              "RelativeToolTip": "DAL\\Models\\msistoreContext.cs",
+              "DocumentIndex": 1,
+              "Title": "Program.cs",
+              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\MSISTORE.WEB\\Program.cs",
+              "RelativeDocumentMoniker": "MSISTORE.WEB\\Program.cs",
+              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\MSISTORE.WEB\\Program.cs",
+              "RelativeToolTip": "MSISTORE.WEB\\Program.cs",
               "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
               "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
-              "WhenOpened": "2024-05-07T15:13:31.339Z",
+              "WhenOpened": "2024-05-07T15:57:31.634Z",
               "EditorCaption": ""
             },
             {
               "$type": "Document",
-              "DocumentIndex": 1,
-              "Title": "nuget.txt",
-              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\nuget.txt",
-              "RelativeDocumentMoniker": "nuget.txt",
-              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\nuget.txt",
-              "RelativeToolTip": "nuget.txt",
-              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAYAAACVAAAA",
-              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.003109|",
-              "WhenOpened": "2024-05-07T15:08:53.409Z",
+              "DocumentIndex": 4,
+              "Title": "BLL",
+              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\BLL\\BLL.csproj",
+              "RelativeDocumentMoniker": "BLL\\BLL.csproj",
+              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\BLL\\BLL.csproj",
+              "RelativeToolTip": "BLL\\BLL.csproj",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000758|",
+              "WhenOpened": "2024-05-07T15:41:04.82Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 3,
+              "Title": "CategoryRepository.cs",
+              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\DAL\\CategoryRepository.cs",
+              "RelativeDocumentMoniker": "DAL\\CategoryRepository.cs",
+              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\DAL\\CategoryRepository.cs",
+              "RelativeToolTip": "DAL\\CategoryRepository.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABMAAAAFAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-07T15:38:19.086Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "CategoryService.cs",
+              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\BLL\\CategoryService.cs",
+              "RelativeDocumentMoniker": "BLL\\CategoryService.cs",
+              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\BLL\\CategoryService.cs",
+              "RelativeToolTip": "BLL\\CategoryService.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABAAAAAJAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-07T15:37:00.406Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "CategoryController.cs",
+              "DocumentMoniker": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\MSISTORE.WEB\\Controllers\\CategoryController.cs",
+              "RelativeDocumentMoniker": "MSISTORE.WEB\\Controllers\\CategoryController.cs",
+              "ToolTip": "E:\\asp mvc\\msistore-aspmvc\\QuanLyBanHang\\MSISTORE.WEB\\Controllers\\CategoryController.cs",
+              "RelativeToolTip": "MSISTORE.WEB\\Controllers\\CategoryController.cs",
+              "ViewState": "AQIAAAAAAAAAAAAAAAAAABUAAAAbAAAA",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000738|",
+              "WhenOpened": "2024-05-07T15:35:45.683Z",
               "EditorCaption": ""
             }
           ]
