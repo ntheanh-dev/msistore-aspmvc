@@ -34,7 +34,7 @@ namespace QLBH.Common.Rsp
         public void SetData(string code, object data)
         {
             Code = code;
-            Data = data;
+            Resutls = data;
         }
 
         #endregion
@@ -44,7 +44,7 @@ namespace QLBH.Common.Rsp
         /// <summary>
         /// Data
         /// </summary>
-        public object Data { get; set; }
+        public object Resutls { get; set; }
 
         #endregion
     }

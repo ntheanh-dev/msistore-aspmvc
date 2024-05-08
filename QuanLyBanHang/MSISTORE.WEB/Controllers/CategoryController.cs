@@ -5,7 +5,7 @@ using QLBH.Common.Req;
 using QLBH.Common.Rsp;
 namespace MSISTORE.WEB.Controllers
 {
-    [Route("api/[controller]")]
+    [Route("api/categories/")]
     [ApiController]
     public class CategoryController : ControllerBase
     {
@@ -19,6 +19,14 @@ namespace MSISTORE.WEB.Controllers
         {
             var res = new SingleRsp();
             res = categoryService.Read(simpleReq.Id);
+            return Ok(res);
+        }
+
+        [HttpGet("")]
+        public IActionResult getCategories()
+        {
+            var res = new SingleRsp();
+            res = categoryService.GetAll();
             return Ok(res);
         }
 

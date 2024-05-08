@@ -18,7 +18,14 @@ namespace BLL
         public override SingleRsp Read(int id)
         {
             var res = new SingleRsp();
-            res.Data = _rep.Read(id);
+            res.Resutls = _rep.Read(id);
+            return res;
+        }
+
+        public SingleRsp GetAll()
+        {
+            var res = new SingleRsp();
+            res.Resutls = _rep.All;
             return res;
         }
     }
