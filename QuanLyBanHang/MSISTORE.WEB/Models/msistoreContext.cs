@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class msistoreContext : DbContext
     {
@@ -61,48 +61,43 @@ namespace DAL.Models
             {
                 entity.ToTable("Image", "msistore");
 
-                entity.HasIndex(e => e.ProductId, "msistore_image_product_id_20c1b923_fk_msistore_product_id");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.File).HasMaxLength(100);
 
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+                entity.Property(e => e.Preview).HasColumnName("preview");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
             });
 
             modelBuilder.Entity<Like>(entity =>
             {
                 entity.ToTable("Like", "msistore");
 
-                entity.HasIndex(e => e.ProductId, "msistore_like_product_id_0e7dcd5d_fk_msistore_product_id");
-
-                entity.HasIndex(e => e.UserId, "msistore_like_user_id_5a93f994_fk_msistore_userinfo_user_id");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
             });
 
             modelBuilder.Entity<Order>(entity =>
             {
                 entity.ToTable("Order", "msistore");
 
-                entity.HasIndex(e => e.Uuid, "msistore_order$uuid")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.UserId, "msistore_order_user_id_e1bb818f_fk_msistore_userinfo_user_id");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.CreateAt).HasColumnType("date");
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("date")
+                    .HasColumnName("created_at");
 
-                entity.Property(e => e.IsActive).HasColumnName("isActive");
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
 
-                entity.Property(e => e.UpdateAt).HasColumnType("date");
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("date")
+                    .HasColumnName("updated_at");
 
-                entity.Property(e => e.UserId).HasColumnName("UserID");
+                entity.Property(e => e.UserId).HasColumnName("user_id");
 
                 entity.Property(e => e.Uuid)
                     .HasMaxLength(32)
@@ -114,26 +109,20 @@ namespace DAL.Models
             {
                 entity.ToTable("OrderItem", "msistore");
 
-                entity.HasIndex(e => e.OrderId, "msistore_orderitem_order_id_fd7cd6f3_fk_msistore_order_id");
-
-                entity.HasIndex(e => e.ProductId, "msistore_orderitem_product_id_98f2f5c8_fk_msistore_product_id");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
-                entity.Property(e => e.OrderId).HasColumnName("OrderID");
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
 
-                entity.Property(e => e.ProductId).HasColumnName("ProductID");
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
 
-                entity.Property(e => e.Quantity).HasMaxLength(3);
+                entity.Property(e => e.Quantity)
+                    .HasMaxLength(3)
+                    .HasColumnName("quantity");
             });
 
             modelBuilder.Entity<Product>(entity =>
             {
                 entity.ToTable("Product", "msistore");
-
-                entity.HasIndex(e => e.BrandId, "msistore_product_brand_id_31330f4e_fk_msistore_brand_id");
-
-                entity.HasIndex(e => e.CategoryId, "msistore_product_category_id_fbae0197_fk_msistore_category_id");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -151,13 +140,21 @@ namespace DAL.Models
 
                 entity.Property(e => e.Detail).HasColumnName("detail");
 
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
                 entity.Property(e => e.Name).HasMaxLength(100);
 
-                entity.Property(e => e.NewPrice).HasColumnType("decimal(6, 2)");
+                entity.Property(e => e.NewPrice)
+                    .HasColumnType("decimal(6, 2)")
+                    .HasColumnName("new_price");
 
-                entity.Property(e => e.OldPrice).HasColumnType("decimal(6, 2)");
+                entity.Property(e => e.OldPrice)
+                    .HasColumnType("decimal(6, 2)")
+                    .HasColumnName("old_price");
 
-                entity.Property(e => e.UpdatedAt).HasColumnType("date");
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("date")
+                    .HasColumnName("updated_at");
             });
 
             modelBuilder.Entity<Role>(entity =>
@@ -173,33 +170,38 @@ namespace DAL.Models
             {
                 entity.ToTable("StatusOrder", "msistore");
 
-                entity.HasIndex(e => e.OrderId, "msistore_statusorder_order_id_2a6131fd_fk_msistore_order_id");
-
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
                 entity.Property(e => e.CreatedAt)
                     .HasColumnType("date")
                     .HasColumnName("created_at");
 
-                entity.Property(e => e.DeliveryMethod).HasMaxLength(50);
+                entity.Property(e => e.DeliveryMethod)
+                    .HasMaxLength(50)
+                    .HasColumnName("delivery_method");
 
-                entity.Property(e => e.DeliveryStage).HasMaxLength(50);
+                entity.Property(e => e.DeliveryStage)
+                    .HasMaxLength(50)
+                    .HasColumnName("delivery_stage");
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.IsPaid).HasColumnName("is_paid");
 
                 entity.Property(e => e.OrderId).HasColumnName("order_id");
 
-                entity.Property(e => e.PaymentMethod).HasMaxLength(50);
+                entity.Property(e => e.PaymentMethod)
+                    .HasMaxLength(50)
+                    .HasColumnName("payment_method");
 
-                entity.Property(e => e.UpdatedAt).HasColumnType("date");
+                entity.Property(e => e.UpdatedAt)
+                    .HasColumnType("date")
+                    .HasColumnName("updated_at");
             });
 
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("User", "msistore");
-
-                entity.HasIndex(e => e.Username, "msistore_user$username")
-                    .IsUnique();
-
-                entity.HasIndex(e => e.RoleId, "msistore_user_role_id_ebd2668b_fk_msistore_role_id");
 
                 entity.Property(e => e.Id).ValueGeneratedNever();
 
@@ -207,13 +209,21 @@ namespace DAL.Models
                     .HasMaxLength(100)
                     .HasColumnName("avatar");
 
-                entity.Property(e => e.DateJoined).HasPrecision(6);
+                entity.Property(e => e.DateJoined)
+                    .HasPrecision(6)
+                    .HasColumnName("date_joined");
 
                 entity.Property(e => e.Email)
                     .HasMaxLength(254)
                     .HasColumnName("email");
 
                 entity.Property(e => e.FirstName).HasMaxLength(150);
+
+                entity.Property(e => e.IsActive).HasColumnName("is_active");
+
+                entity.Property(e => e.IsStaff).HasColumnName("is_staff");
+
+                entity.Property(e => e.IsSuperuser).HasColumnName("is_superuser");
 
                 entity.Property(e => e.LastLogin)
                     .HasPrecision(6)
@@ -243,21 +253,25 @@ namespace DAL.Models
                     .ValueGeneratedNever()
                     .HasColumnName("user_id");
 
-                entity.Property(e => e.City).HasMaxLength(50);
+                entity.Property(e => e.City)
+                    .HasMaxLength(50)
+                    .HasColumnName("city");
 
-                entity.Property(e => e.Country).HasMaxLength(50);
+                entity.Property(e => e.Country)
+                    .HasMaxLength(50)
+                    .HasColumnName("country");
 
-                entity.Property(e => e.HomeNumber).HasMaxLength(50);
+                entity.Property(e => e.HomeNumber)
+                    .HasMaxLength(50)
+                    .HasColumnName("home_number");
 
-                entity.Property(e => e.PhoneNumber).HasMaxLength(10);
+                entity.Property(e => e.PhoneNumber)
+                    .HasMaxLength(10)
+                    .HasColumnName("phone_number");
 
-                entity.Property(e => e.Street).HasMaxLength(50);
-
-                entity.HasOne(d => d.User)
-                    .WithOne(p => p.Userinfo)
-                    .HasForeignKey<Userinfo>(d => d.UserId)
-                    .OnDelete(DeleteBehavior.ClientSetNull)
-                    .HasConstraintName("msistore_userinfo$msistore_userinfo_user_id_aec5a4e8_fk_msistore_user_id");
+                entity.Property(e => e.Street)
+                    .HasMaxLength(50)
+                    .HasColumnName("street");
             });
 
             OnModelCreatingPartial(modelBuilder);

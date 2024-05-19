@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class Product
     {
@@ -14,7 +14,7 @@ namespace DAL.Models
         public string Detail { get; set; } = null!;
         public decimal OldPrice { get; set; }
         public decimal NewPrice { get; set; }
-        public Guid? BrandId { get; set; }
-        public Guid CategoryId { get; set; }
+        public long? BrandId { get; set; }
+        public long CategoryId { get; set; }
     }
 }

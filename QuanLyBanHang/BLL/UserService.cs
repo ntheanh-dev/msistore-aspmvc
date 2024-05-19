@@ -12,19 +12,23 @@ using System;
 using Microsoft.Extensions.Configuration;
 using System.Runtime.InteropServices;
 using Microsoft.AspNetCore.Http;
+using AutoMapper;
+using BLL.DTOs;
 namespace BLL
 {
     public class UserService : GenericSvc<UserRepository, User>
     {
         private UserRepository userRepository = new UserRepository();
         private readonly Cloudinary _cloudinary;
+        private readonly IMapper _mapper;
 
-        public UserService(IConfiguration configuration)
+        public UserService(IConfiguration configuration, IMapper mapper)
         {
             // CLOUDINARY_URL=cloudinary://<API_KEY>:<API_SECRET>@<CLOUD_NAME>
             var cloudinaryUrl = "cloudinary://922611133231776:Q0bJhJc_3Z06xk1mFMf0oDSgWxo@dwvg5xlum";
             _cloudinary = new Cloudinary(cloudinaryUrl);
             _cloudinary.Api.Secure = true;
+            _mapper = mapper;
         }
 
         private string HashPassword(string password)
@@ -48,9 +52,8 @@ namespace BLL
             return hashedPassword;
         }
 
-        public async Task<SingleRsp> CreateUserAsync(UserReq userReq)
+        public async Task<UserDTO> CreateUserAsync(UserReq userReq)
         {
-            var res = new SingleRsp();
 
             User newUser  = new User {
 
@@ -62,13 +65,10 @@ namespace BLL
                 Password = HashPassword(userReq.Password),
             };
             
-
             Userinfo userinfo = new Userinfo
             {
                 UserId = newUser.Id,
             };
-           
-
 
             // Upload avatar to Cloudinary
             if (userReq.Avatar is not null)
@@ -80,8 +80,9 @@ namespace BLL
                 newUser.Avatar = avatarUrl;
             }
 
-            res = await userRepository.AddUserAsync(newUser, userinfo);
-            return res;
+            await userRepository.AddUserAsync(newUser, userinfo);
+
+            return _mapper.Map<UserDTO>(newUser);
         }
 
         private async Task<string> UploadAvatarAsync(IFormFile file)
