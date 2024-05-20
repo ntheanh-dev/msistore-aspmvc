@@ -10,5 +10,8 @@ namespace Common.Rsp
     {
         public string Username { get; set; }
         public string Token { get; set; }
+        public string Email { get; set; }
+
+        public string avatar { get; set; }
     }
 }

@@ -8,6 +8,7 @@ namespace DAL
 {
     public class UserRepository : GenericRep<msistoreContext, User>
     {
+       
         public async Task<SingleRsp> AddUserAsync(User newUser, Userinfo userinfo)
         {
             var res = new SingleRsp();

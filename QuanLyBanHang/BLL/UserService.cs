@@ -36,8 +36,12 @@ namespace BLL
             this._configuration = configuration;
         }
 
-    
 
+        public async Task<User> GetUserByUsernameAsync(string username)
+        {
+            var users = await userRepository.FindAsync(u => u.Username == username);
+            return users.FirstOrDefault();
+        }
         public async Task<UserDTO> CreateUserAsync(UserReq userReq)
         {
 
@@ -88,10 +92,6 @@ namespace BLL
             {
                 File = new FileDescription(tempFileName),
                 Timestamp = DateTime.Now
-                //,
-                //UseFilename = true,
-                //UniqueFilename = false,
-                //Overwrite = true
             };
 
             ImageUploadResult uploadResult = null;
@@ -145,12 +145,8 @@ namespace BLL
                 return res;
             }
             string token = GenerateJwtToken(user);
-            var authRsp = new UserRsp
-            {
-                Username = user.Username,
-                Token = token,
-            };
-            res.SetDatas("200", authRsp);
+          
+            res.Resutls = token;
             return res;
         }
 

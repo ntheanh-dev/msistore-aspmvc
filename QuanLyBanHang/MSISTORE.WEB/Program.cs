@@ -4,6 +4,7 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
@@ -11,7 +12,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddBLLServices();
+builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
 
 //Cors 
 builder.Services.AddCors(options =>
@@ -23,7 +24,6 @@ builder.Services.AddCors(options =>
                .AllowAnyHeader();
     });
 });
-
 
 // Cấu hình JWT
 builder.Services.AddAuthentication(options =>
@@ -45,6 +45,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
+builder.Services.AddScoped<UserService>(); 
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
+
 var app = builder.Build();
 
 // Sử dụng xác thực và ủy quyền
@@ -57,10 +60,10 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
-app.UseAuthorization();
 
 app.MapControllers();
 app.Run();
