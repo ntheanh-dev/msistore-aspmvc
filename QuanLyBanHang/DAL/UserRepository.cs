@@ -2,6 +2,7 @@
 using QLBH.Common.DAL;
 using QLBH.Common.Rsp;
 using Microsoft.EntityFrameworkCore;
+using System.Linq.Expressions;
 
 namespace DAL
 {
@@ -24,6 +25,13 @@ namespace DAL
                 res.SetError($"Error: {ex.Message}");
             }
             return res;
+        }
+        public async Task<List<User>> FindAsync(Expression<Func<User, bool>> predicate)
+        {
+            using (var context = new msistoreContext())
+            {
+                return await context.Users.Where(predicate).ToListAsync();
+            }
         }
     }
 }

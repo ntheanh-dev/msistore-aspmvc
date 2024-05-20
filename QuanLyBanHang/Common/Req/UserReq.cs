@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.DAL
+namespace Common.Req
 {
     public class UserReq
     {
@@ -19,7 +19,7 @@ namespace Common.DAL
         public short IsStaff { get; set; } = 0;
         public short IsActive { get; set; } = 1;
         public DateTime? DateJoined { get; set; }
-        public IFormFile ? Avatar { get; set; } 
+        public IFormFile? Avatar { get; set; }
         public long RoleId { get; set; } = 1;
     }
 }

@@ -1,19 +1,20 @@
-﻿using DAL;
-using DAL.Models;
-using QLBH.Common.BLL;
-using QLBH.Common.Rsp;
-using Common.DAL;
-using System.Security.Cryptography;
-using System.Threading.Tasks;
+﻿using AutoMapper;
+using BLL.DTOs;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
-using dotenv.net;
-using System;
-using Microsoft.Extensions.Configuration;
-using System.Runtime.InteropServices;
+using Common.Req;
+using DAL;
+using DAL.Models;
 using Microsoft.AspNetCore.Http;
-using AutoMapper;
-using BLL.DTOs;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
+using QLBH.Common.BLL;
+using QLBH.Common.Rsp;
+using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using System.Security.Cryptography;
+using System.Text;
+
 namespace BLL
 {
     public class UserService : GenericSvc<UserRepository, User>
@@ -21,6 +22,7 @@ namespace BLL
         private UserRepository userRepository = new UserRepository();
         private readonly Cloudinary _cloudinary;
         private readonly IMapper _mapper;
+        private readonly IConfiguration _configuration;
 
         public UserService(IConfiguration configuration, IMapper mapper)
         {
@@ -31,40 +33,22 @@ namespace BLL
             _mapper = mapper;
         }
 
-        private string HashPassword(string password)
-        {
-            byte[] salt;
-            using (var rng = new RNGCryptoServiceProvider())
-            {
-                rng.GetBytes(salt = new byte[16]);
-            }
-            var pbkdf2 = new Rfc2898DeriveBytes(password, salt, 10000);
-            byte[] hash = pbkdf2.GetBytes(20);
-
-            // Combine the salt and password bytes for later use
-            byte[] hashBytes = new byte[36];
-            Array.Copy(salt, 0, hashBytes, 0, 16);
-            Array.Copy(hash, 0, hashBytes, 16, 20);
-
-            // Convert to base64
-            string hashedPassword = Convert.ToBase64String(hashBytes);
-
-            return hashedPassword;
-        }
+    
 
         public async Task<UserDTO> CreateUserAsync(UserReq userReq)
         {
 
-            User newUser  = new User {
+            User newUser = new User
+            {
 
                 Id = Guid.NewGuid(),
                 FirstName = userReq.FirstName,
                 LastName = userReq.LastName,
                 Email = userReq.Email,
                 Username = userReq.Username,
-                Password = HashPassword(userReq.Password),
+                Password = BCrypt.Net.BCrypt.HashPassword(userReq.Password),
             };
-            
+
             Userinfo userinfo = new Userinfo
             {
                 UserId = newUser.Id,
@@ -123,5 +107,47 @@ namespace BLL
 
             return uploadResult?.SecureUrl?.ToString();
         }
+        private string GenerateJwtToken(User user)
+        {
+            var claims = new[]
+            {
+                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
+                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
+            };
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
+                claims: claims,
+                expires: DateTime.Now.AddMinutes(30),
+                signingCredentials: creds);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        
+        public async Task<SingleRsp> AuthenticateJWTAsync(LoginReq loginReq)
+        {
+            var res = new SingleRsp();
+
+            var users = await userRepository.FindAsync(u => u.Username == loginReq.Username);
+            var user = users.FirstOrDefault();
+
+            // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
+            if (user == null || !BCrypt.Net.BCrypt.Verify(loginReq.Password, user.Password))
+            {
+                res.SetError("Invalid credentials.");
+                return res;
+            }
+
+            res.SetData("200", loginReq.Username);
+            return res;
+        }
+
     }
+
+
 }

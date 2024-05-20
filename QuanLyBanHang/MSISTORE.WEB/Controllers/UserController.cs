@@ -1,6 +1,6 @@
 ﻿using AutoMapper;
 using BLL;
-using Common.DAL;
+using Common.Req;
 using Microsoft.AspNetCore.Mvc;
 
 namespace MSISTORE.WEB.Controllers
@@ -16,6 +16,12 @@ namespace MSISTORE.WEB.Controllers
         public async Task<IActionResult> CreateUser([FromForm] UserReq userReq)
         {
             return Ok(await _userService.CreateUserAsync(userReq));
+        }
+        [HttpPost("Login")]
+        public async Task<IActionResult> LoginUser([FromBody] LoginReq loginReq)
+        {
+            var res = await _userService.AuthenticateJWTAsync(loginReq);
+            return Ok(res.Resutls);
         }
         public IActionResult Index()
         {
