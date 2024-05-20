@@ -32,6 +32,8 @@ namespace BLL
             _cloudinary = new Cloudinary(cloudinaryUrl);
             _cloudinary.Api.Secure = true;
             _mapper = mapper;
+
+            this._configuration = configuration;
         }
 
     
@@ -58,14 +60,15 @@ namespace BLL
             // Upload avatar to Cloudinary
             if (userReq.Avatar is not null)
             {
-                using var memoryStream = new MemoryStream();
-                await userReq.Avatar.CopyToAsync(memoryStream);
-
+         
                 string avatarUrl = await UploadAvatarAsync(userReq.Avatar);
                 newUser.Avatar = avatarUrl;
+                await userRepository.AddUserAsync(newUser, userinfo);
             }
-
-            await userRepository.AddUserAsync(newUser, userinfo);
+            else
+            {
+                await userRepository.AddUserAsync(newUser, userinfo);
+            }
 
             return _mapper.Map<UserDTO>(newUser);
         }
@@ -115,10 +118,12 @@ namespace BLL
                 new Claim(ClaimTypes.Name,user.Username)
             }; ;
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lnpjjowahygogeltajkpuffzbvjickmf"));
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
+                issuer: _configuration["Jwt:Issuer"],
+                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
@@ -126,7 +131,6 @@ namespace BLL
             return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
-        
         public async Task<SingleRsp> AuthenticateJWTAsync(LoginReq loginReq)
         {
             var res = new SingleRsp();
