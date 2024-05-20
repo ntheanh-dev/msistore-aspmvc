@@ -6,6 +6,7 @@ namespace QLBH.Common.Rsp
 {
     public class SingleRsp : BaseRsp
     {
+        public object Resutls { get; set; }
         #region -- Methods --
 
         /// <summary>
@@ -36,6 +37,10 @@ namespace QLBH.Common.Rsp
             Code = code;
             Resutls = data;
         }
+        public void SetDatas(string statusCode, object data)
+        {
+            Resutls = new { StatusCode = statusCode, Data = data };
+        }
 
         #endregion
 
@@ -44,7 +49,7 @@ namespace QLBH.Common.Rsp
         /// <summary>
         /// Data
         /// </summary>
-        public object Resutls { get; set; }
+
 
         #endregion
     }

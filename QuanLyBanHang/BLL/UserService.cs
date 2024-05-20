@@ -3,6 +3,7 @@ using BLL.DTOs;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Common.Req;
+using Common.Rsp;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -109,18 +110,15 @@ namespace BLL
         }
         private string GenerateJwtToken(User user)
         {
-            var claims = new[]
-            {
-                new Claim(JwtRegisteredClaimNames.Sub, user.Username),
-                new Claim(JwtRegisteredClaimNames.Jti, Guid.NewGuid().ToString())
-            };
+            List<Claim> claims = new List<Claim> { 
 
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
+                new Claim(ClaimTypes.Name,user.Username)
+            }; ;
+
+            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes("lnpjjowahygogeltajkpuffzbvjickmf"));
             var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
 
             var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
                 claims: claims,
                 expires: DateTime.Now.AddMinutes(30),
                 signingCredentials: creds);
@@ -142,8 +140,13 @@ namespace BLL
                 res.SetError("Invalid credentials.");
                 return res;
             }
-
-            res.SetData("200", loginReq.Username);
+            string token = GenerateJwtToken(user);
+            var authRsp = new UserRsp
+            {
+                Username = user.Username,
+                Token = token,
+            };
+            res.SetDatas("200", authRsp);
             return res;
         }
 

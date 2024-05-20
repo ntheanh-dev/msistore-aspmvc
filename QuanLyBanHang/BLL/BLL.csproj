@@ -26,4 +26,8 @@
     <ProjectReference Include="..\DAL\DAL.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <Folder Include="JWT\" />
+  </ItemGroup>
+
 </Project>
