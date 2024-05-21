@@ -126,6 +126,23 @@ namespace QLBH.Common.DAL
             return t.Entity;
         }
 
+        public T GetLastRecord()
+        {
+            // Get the primary key property
+            var keyName = _context.Model.FindEntityType(typeof(T))
+                            .FindPrimaryKey().Properties
+                            .Select(p => p.Name)
+                            .Single();
+
+            // Query the database for all entities of type T
+            var entities = _context.Set<T>().AsEnumerable();
+
+            // Find the last record using LINQ to Objects
+            var lastRecord = entities.OrderByDescending(e => Convert.ChangeType(typeof(T).GetProperty(keyName).GetValue(e), typeof(long))).FirstOrDefault();
+
+            return lastRecord;
+        }
+
         #endregion
 
         #region -- Properties --

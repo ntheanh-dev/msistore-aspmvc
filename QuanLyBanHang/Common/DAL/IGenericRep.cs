@@ -55,6 +55,7 @@ namespace QLBH.Common.DAL
         /// <param name="l">List model</param>
         void Update(List<T> l);
 
+        T GetLastRecord();
         #endregion
 
         #region -- Properties --
