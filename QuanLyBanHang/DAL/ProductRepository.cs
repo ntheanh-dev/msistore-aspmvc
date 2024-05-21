@@ -21,6 +21,7 @@ namespace DAL
             return res;
         }
 
+
         public int Remove(int id)
         {
             var m = base.All.First(x => x.Id == id);

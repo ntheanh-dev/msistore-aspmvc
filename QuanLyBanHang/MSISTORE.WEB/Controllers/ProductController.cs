@@ -1,5 +1,6 @@
 ﻿using BLL;
 using Common.Req;
+using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using QLBH.Common.Req;
@@ -27,6 +28,9 @@ namespace MSISTORE.WEB.Controllers
         [HttpGet("")]
         public IActionResult SearchProduct([FromQuery] SearchProductReq searchProductReq)
         {
+            var lastRecord = productService.GetLastRecord();
+            Console.WriteLine("Last record: " + lastRecord.Id.ToString());
+
             var res = productService.Search(searchProductReq);
             return Ok(res);
         }

@@ -72,6 +72,11 @@ namespace BLL
             return res;
         }
 
+        public Product GetLastRecord()
+        {
+            return repostiory.GetLastRecord();
+        }
+
         #endregion
     }
 }
