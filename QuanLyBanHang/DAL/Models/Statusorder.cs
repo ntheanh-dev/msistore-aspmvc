@@ -5,7 +5,7 @@ namespace DAL.Models
 {
     public partial class StatusOrder
     {
-        public Guid Id { get; set; }
+        public  long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
@@ -13,6 +13,6 @@ namespace DAL.Models
         public string DeliveryMethod { get; set; } = null!;
         public string DeliveryStage { get; set; } = null!;
         public string PaymentMethod { get; set; } = null!;
-        public Guid OrderId { get; set; }
+        public long OrderId { get; set; }
     }
 }

@@ -5,8 +5,8 @@ namespace DAL.Models
 {
     public partial class Like
     {
-        public Guid Id { get; set; }
-        public Guid ProductId { get; set; }
-        public Guid UserId { get; set; }
+        public long Id { get; set; }
+        public long ProductId { get; set; }
+        public long UserId { get; set; }
     }
 }

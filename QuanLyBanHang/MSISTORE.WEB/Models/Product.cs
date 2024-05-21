@@ -5,7 +5,14 @@ namespace MSISTORE.WEB.Models
 {
     public partial class Product
     {
-        public Guid Id { get; set; }
+        public Product()
+        {
+            Images = new HashSet<Image>();
+            Likes = new HashSet<Like>();
+            OrderItems = new HashSet<OrderItem>();
+        }
+
+        public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
@@ -16,5 +23,11 @@ namespace MSISTORE.WEB.Models
         public decimal NewPrice { get; set; }
         public long? BrandId { get; set; }
         public long CategoryId { get; set; }
+
+        public virtual Brand? Brand { get; set; }
+        public virtual Category Category { get; set; } = null!;
+        public virtual ICollection<Image> Images { get; set; }
+        public virtual ICollection<Like> Likes { get; set; }
+        public virtual ICollection<OrderItem> OrderItems { get; set; }
     }
 }

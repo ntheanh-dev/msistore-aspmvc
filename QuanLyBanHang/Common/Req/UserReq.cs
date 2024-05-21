@@ -21,5 +21,7 @@ namespace Common.Req
         public DateTime? DateJoined { get; set; }
         public IFormFile? Avatar { get; set; }
         public long RoleId { get; set; } = 1;
+
+       
     }
 }

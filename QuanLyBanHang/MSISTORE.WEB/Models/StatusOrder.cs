@@ -5,7 +5,7 @@ namespace MSISTORE.WEB.Models
 {
     public partial class StatusOrder
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
@@ -14,5 +14,7 @@ namespace MSISTORE.WEB.Models
         public string DeliveryStage { get; set; } = null!;
         public string PaymentMethod { get; set; } = null!;
         public long OrderId { get; set; }
+
+        public virtual Order Order { get; set; } = null!;
     }
 }

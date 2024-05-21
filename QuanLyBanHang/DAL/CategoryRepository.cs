@@ -12,11 +12,10 @@ namespace DAL
     {
         public CategoryRepository() { }
 
-        public Category Read(Guid id)
+        public override Category Read(int id)
         {
             var res = All.FirstOrDefault(x => x.Id == id);
             return res;
         }
-
     }
 }

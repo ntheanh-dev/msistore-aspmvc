@@ -5,7 +5,7 @@ namespace DAL.Models
 {
     public partial class Category
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string Name { get; set; } = null!;
     }
 }

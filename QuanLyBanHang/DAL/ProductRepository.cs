@@ -14,20 +14,20 @@ namespace DAL
 {
     public class ProductRepository : GenericRep<msistoreContext, Product>
     {
-        
-        public Product Read(Guid id)
+        # region -- Overrides--------
+        public override Product Read(int id)
         {
             var res = All.FirstOrDefault(x => x.Id == id);
             return res;
         }
 
-        public int Remove(Guid id)
+        public int Remove(int id)
         {
             var m = base.All.First(x => x.Id == id);
             m = base.Delete(m);
             return 1;
         }
-       
+        # endregion
 
         # region -- Methods --------
         public SingleRsp CreateProduct(Product product)
@@ -65,7 +65,7 @@ namespace DAL
             var query = All.AsQueryable();
 
             //// Filter by category id
-            if (request.cateId != Guid.Empty)
+            if (request.cateId != 0)
             {
                 query = query.Where(p => p.CategoryId == request.cateId);
             }

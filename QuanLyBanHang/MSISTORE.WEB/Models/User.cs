@@ -5,7 +5,7 @@ namespace MSISTORE.WEB.Models
 {
     public partial class User
     {
-        public Guid Id { get; set; }
+        public long Id { get; set; }
         public string Password { get; set; } = null!;
         public DateTime? LastLogin { get; set; }
         public short IsSuperuser { get; set; }
@@ -18,5 +18,8 @@ namespace MSISTORE.WEB.Models
         public DateTime DateJoined { get; set; }
         public string Avatar { get; set; } = null!;
         public long RoleId { get; set; }
+
+        public virtual Role Role { get; set; } = null!;
+        public virtual Userinfo? Userinfo { get; set; }
     }
 }

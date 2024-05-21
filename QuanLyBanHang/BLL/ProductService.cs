@@ -34,7 +34,7 @@ namespace BLL
         {
             var res = new SingleRsp();
 
-            var m1 = m.Id != Guid.Empty ? _rep.Read(m.Id) : null;
+            var m1 = m.Id > 0 ? _rep.Read((int)m.Id) : null;
             if (m1 == null)
             {
                 res.SetError("EZ103", "No data");
@@ -47,7 +47,6 @@ namespace BLL
             return res;
         }
 
-
         #endregion
 
         #region -- Methods----
@@ -55,7 +54,7 @@ namespace BLL
         {
             var res = new SingleRsp();
             Product newP = new Product();
-            newP.Id = Guid.NewGuid();
+            newP.Id = product.Id;
             newP.Name = product.Name;
             newP.OldPrice = product.OldPrice;
             newP.NewPrice = product.NewPrice;

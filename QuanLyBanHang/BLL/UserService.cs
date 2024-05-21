@@ -42,37 +42,40 @@ namespace BLL
             var users = await userRepository.FindAsync(u => u.Username == username);
             return users.FirstOrDefault();
         }
+
+       
+
         public async Task<UserDTO> CreateUserAsync(UserReq userReq)
         {
 
             User newUser = new User
             {
-
-                Id = Guid.NewGuid(),
+                
                 FirstName = userReq.FirstName,
                 LastName = userReq.LastName,
                 Email = userReq.Email,
                 Username = userReq.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(userReq.Password),
-            };
-
-            Userinfo userinfo = new Userinfo
-            {
-                UserId = newUser.Id,
-            };
-
+            };   
             // Upload avatar to Cloudinary
             if (userReq.Avatar is not null)
             {
          
                 string avatarUrl = await UploadAvatarAsync(userReq.Avatar);
                 newUser.Avatar = avatarUrl;
-                await userRepository.AddUserAsync(newUser, userinfo);
+               
             }
-            else
+            var result =  await userRepository.AddUserAsync(newUser);
+            if (!result.Success)
             {
-                await userRepository.AddUserAsync(newUser, userinfo);
+                // Handle error
+                throw new Exception("Failed to add userinfo");
             }
+            Userinfo userinfo = new Userinfo
+            {
+                UserId = (long)newUser.Id 
+            };
+            await userRepository.AddUserinfoAsync(userinfo);
 
             return _mapper.Map<UserDTO>(newUser);
         }

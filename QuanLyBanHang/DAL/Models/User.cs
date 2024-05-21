@@ -1,8 +1,12 @@
-﻿namespace DAL.Models
+﻿using System.ComponentModel.DataAnnotations.Schema;
+using System.ComponentModel.DataAnnotations;
+
+namespace DAL.Models
 {
     public partial class User
     {
-        public Guid Id { get; set; }
+        
+        public long ? Id { get; set; }
         public string Password { get; set; } = null!;
         public DateTime? LastLogin { get; set; }
         public short IsSuperuser { get; set; }
