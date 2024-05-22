@@ -12,7 +12,7 @@ namespace MSISTORE.WEB.Models
         }
 
         public long Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreateAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
         public string Uuid { get; set; } = null!;

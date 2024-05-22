@@ -6,7 +6,7 @@ namespace MSISTORE.WEB.Models
     public partial class StatusOrder
     {
         public long Id { get; set; }
-        public DateTime CreatedAt { get; set; }
+        public DateTime CreateAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
         public short IsPaid { get; set; }

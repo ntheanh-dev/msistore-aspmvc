@@ -9,15 +9,23 @@ namespace DAL
     public class UserRepository : GenericRep<msistoreContext, User>
     {
 
-        public async Task<SingleRsp> AddUserAsync(User newUser)
+        public async Task<SingleRsp> AddUserAsync(User newUser,Userinfo userinfo)
         {
             var res = new SingleRsp();
             try
             {
                 using (var context = new msistoreContext())
                 {
-                    await context.Users.AddAsync(newUser);
+                    using var transaction = await context.Database.BeginTransactionAsync();
+                    context.Users.Add(newUser);
                     await context.SaveChangesAsync();
+
+                    userinfo.UserId = newUser.Id;
+                    
+                    context.Userinfos.Add(userinfo);
+                    await context.SaveChangesAsync();
+
+                    transaction.Commit();
                     
                 }
             }
@@ -27,23 +35,7 @@ namespace DAL
             }
             return res;
         }
-        public async Task<SingleRsp> AddUserinfoAsync(Userinfo userinfo)
-        {
-            var res = new SingleRsp();
-            try
-            {
-                using (var context = new msistoreContext())
-                {
-                    await context.Userinfos.AddAsync(userinfo);
-                    await context.SaveChangesAsync();
-                }
-            }
-            catch (Exception ex)
-            {
-                res.SetError($"Error: {ex.Message}");
-            }
-            return res;
-        }
+       
 
 
         public async Task<List<User>> FindAsync(Expression<Func<User, bool>> predicate)

@@ -9,5 +9,7 @@ namespace DAL.Models
         public string File { get; set; } = null!;
         public short Preview { get; set; }
         public long ProductId { get; set; }
+
+        public virtual Product Product { get; set; } = null!;
     }
 }

@@ -1,9 +1,16 @@
-﻿using System.ComponentModel.DataAnnotations.Schema;
+﻿using System;
+using System.Collections.Generic;
 
 namespace DAL.Models
 {
     public partial class Userinfo
     {
+        public Userinfo()
+        {
+            Likes = new HashSet<Like>();
+            Orders = new HashSet<Order>();
+        }
+
         public string? Country { get; set; }
         public string? City { get; set; }
         public string? Street { get; set; }
@@ -12,5 +19,7 @@ namespace DAL.Models
         public long UserId { get; set; }
 
         public virtual User User { get; set; } = null!;
+        public virtual ICollection<Like> Likes { get; set; }
+        public virtual ICollection<Order> Orders { get; set; }
     }
 }
