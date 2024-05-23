@@ -12,7 +12,6 @@ namespace DAL.Models
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;
-        public short IsActive { get; set; }
         public DateTime DateJoined { get; set; }
         public string? Avatar { get; set; }
         public long RoleId { get; set; }
