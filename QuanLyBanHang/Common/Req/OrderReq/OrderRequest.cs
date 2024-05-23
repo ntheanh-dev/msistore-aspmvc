@@ -5,17 +5,17 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Req
+namespace Common.Req.OrderReq
 {
     public class OrderRequest
     {
         public long ProductId { get; set; }
-
         public string Quantity { get; set; }
+        public string DeliveryMethod { get; set; } = null!;
+        public string DeliveryStage { get; set; } = null!;
+        public string PaymentMethod { get; set; } = null!;
 
 
-        public DateTime CreatedAt { get; set; }
-        public DateTime UpdatedAt { get; set;}
-        
+
     }
 }

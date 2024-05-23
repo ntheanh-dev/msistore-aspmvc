@@ -1,13 +1,14 @@
-﻿using Common.Req;
+﻿using Common.Req.OrderReq;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using QLBH.Common.DAL;
 
 namespace DAL
 {
     public class OrderRepository : GenericRep<msistoreContext, Order>
     {
-
-        public async Task<Order> CreateOrderAsync(long userId, List<OrderRequest> items)
+        // Order
+        public async Task<(Order Order, List<Product> ProductOrdered)> CreateOrderAsync(long userId, List<OrderRequest> items)
         {
             using (var context = new msistoreContext())
             {
@@ -21,6 +22,7 @@ namespace DAL
                             await transaction.RollbackAsync();
                             throw new Exception($"User with ID {userId} not found");
                         }
+
                         var order = new Order
                         {
                             UserId = userId,
@@ -44,17 +46,37 @@ namespace DAL
                             {
                                 ProdcutId = product.Id,
                                 Quantity = item.Quantity,
+                                Order = order,
+                                UnitPrice = product.NewPrice
+                            };
+                            var statusOrder = new Statusorder
+                            {
+                                CreatedAt = DateTime.UtcNow,
+                                UpdatedAt = DateTime.UtcNow,
+                                IsActive = 1,
+                                IsPaid = 0,
+                                DeliveryMethod = item.DeliveryMethod,
+                                DeliveryStage = item.DeliveryStage,
+                                PaymentMethod = item.PaymentMethod,
                                 Order = order
                             };
 
                             order.Orderitems.Add(orderItem);
+                            context.Statusorders.Add(statusOrder);
                         }
 
                         context.Orders.Add(order);
+                        
                         await context.SaveChangesAsync();
 
                         await transaction.CommitAsync();
-                        return order;
+
+                        var productOrdered = await context.Products.AsNoTracking()
+                            .Include(_ => _.Images)
+                            .Where(_ => order.Orderitems.Select(ot => ot.ProdcutId)
+                            .Contains(_.Id)).ToListAsync();
+
+                        return (order, productOrdered);
                     }
                     catch (Exception ex)
                     {
@@ -64,5 +86,9 @@ namespace DAL
                 }
             }
         }
+
+
+        //View Order from User
+        
     }
 }

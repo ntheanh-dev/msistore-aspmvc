@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BLL;
 using BLL.DTOs;
-using Common.Req;
+using Common.Req.UserRequest;
 using Common.Rsp;
 using DAL;
 using DAL.Models;
@@ -14,9 +14,6 @@ namespace MSISTORE.WEB.Controllers
     public class UserController : Controller
     {
        private readonly UserService _userService;
-
-
-        
 
         public UserController(IConfiguration configuration, IMapper mapper) {
             _userService = new UserService(configuration, mapper);
@@ -58,9 +55,17 @@ namespace MSISTORE.WEB.Controllers
             };
             return Ok(userDto);
         }
-        public IActionResult Index()
+        [HttpPatch("{userId:long}/update-user")]
+        public async Task<IActionResult> UpdateUser(long userId, [FromForm] UpdateUserReq updateReq)
         {
-            return View();
+            var res = await _userService.UpdateUserAsync(userId, updateReq);
+
+            if (res.Success)
+            {
+                return Ok(res.Resutls);
+            }
+
+            return BadRequest(res.Message);
         }
     }
 }

@@ -111,6 +111,8 @@ namespace DAL.Models
 
                 entity.Property(e => e.Quantity).HasMaxLength(3);
 
+                entity.Property(e => e.UnitPrice).HasColumnType("money");
+
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Orderitems)
                     .HasForeignKey(d => d.OrderId)

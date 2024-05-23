@@ -2,16 +2,9 @@
 using Common.Rsp;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using QLBH.Common.DAL;
 using QLBH.Common.Req;
 using QLBH.Common.Rsp;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {

@@ -1,12 +1,12 @@
 ﻿using AutoMapper;
 using BLL.DTOs;
+using BLL.Helper;
+using BLL.Hepler;
 using BLL.Token;
-using CloudinaryDotNet;
-using CloudinaryDotNet.Actions;
-using Common.Req;
+using Common.Req.UserRequest;
+using Common.Rsp;
 using DAL;
 using DAL.Models;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
 using QLBH.Common.BLL;
 using QLBH.Common.Rsp;
@@ -15,8 +15,8 @@ namespace BLL
 {
     public class UserService : GenericSvc<UserRepository, User>
     {
-        private UserRepository userRepository = new UserRepository();
-        private readonly Cloudinary _cloudinary;
+        private readonly UserRepository _userRepository;
+        private readonly HelperCloudinary _helperCloudinary;
         private readonly IMapper _mapper;
         private readonly IConfiguration _configuration;
 
@@ -24,20 +24,18 @@ namespace BLL
         {
             // CLOUDINARY_URL=cloudinary://<API_KEY>:<API_SECRET>@<CLOUD_NAME>
             var cloudinaryUrl = "cloudinary://922611133231776:Q0bJhJc_3Z06xk1mFMf0oDSgWxo@dwvg5xlum";
-            _cloudinary = new Cloudinary(cloudinaryUrl);
-            _cloudinary.Api.Secure = true;
+            _helperCloudinary = new HelperCloudinary(cloudinaryUrl);
             _mapper = mapper;
-
+            _userRepository = new UserRepository();
             this._configuration = configuration;
         }
 
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            var users = await userRepository.FindAsync(u => u.Username == username);
+            var users = await _userRepository.FindAsync(u => u.Username == username);
             return users.FirstOrDefault();
         }
-
 
 
         public async Task<UserDTO> CreateUserAsync(UserReq userReq)
@@ -56,7 +54,7 @@ namespace BLL
             if (userReq.Avatar is not null)
             {
 
-                string avatarUrl = await UploadAvatarAsync(userReq.Avatar);
+                string avatarUrl = await _helperCloudinary.UploadAvatarAsync(userReq.Avatar);
                 newUser.Avatar = avatarUrl;
 
             }
@@ -64,7 +62,7 @@ namespace BLL
             {
                 UserId = newUser.Id
             };
-            var result = await userRepository.AddUserAsync(newUser, userinfo);
+            var result = await _userRepository.AddUserAsync(newUser, userinfo);
             if (!result.Success)
             {
                 // Handle error
@@ -75,47 +73,13 @@ namespace BLL
             return _mapper.Map<UserDTO>(newUser);
         }
 
-        private async Task<string> UploadAvatarAsync(IFormFile file)
-        {
-            var tempFileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
-            using var stream = new MemoryStream();
-            await file.CopyToAsync(stream);
-            using (var fileStream = File.Create(tempFileName))
-            {
-                stream.Seek(0, SeekOrigin.Begin);
-                stream.CopyTo(fileStream);
-            }
-
-            var uploadParams = new ImageUploadParams()
-            {
-                File = new FileDescription(tempFileName),
-                Timestamp = DateTime.Now
-            };
-
-            ImageUploadResult uploadResult = null;
-
-            try
-            {
-                uploadResult = await _cloudinary.UploadAsync(uploadParams);
-            }
-            catch (Exception ex)
-            {
-                var cc = ex;
-            }
-            finally
-            {
-                File.Delete(tempFileName);
-            }
-
-            return uploadResult?.SecureUrl?.ToString();
-        }
 
 
         public async Task<SingleRsp> AuthenticateJWTAsync(LoginReq loginReq)
         {
             var res = new SingleRsp();
 
-            var users = await userRepository.FindAsync(u => u.Username == loginReq.Username);
+            var users = await _userRepository.FindAsync(u => u.Username == loginReq.Username);
             var user = users.FirstOrDefault();
 
             // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
@@ -134,6 +98,73 @@ namespace BLL
 
             return res;
         }
+
+
+
+        public async Task<SingleRsp> UpdateUserAsync(long userId, UpdateUserReq updateUserReq)
+        {
+            var res = new SingleRsp();
+
+            // Lấy thông tin user hiện tại từ database
+            var existingUser = await _userRepository.GetUserByIdAsync(userId);
+
+            if (existingUser == null)
+            {
+                res.SetError("User not found.");
+                return res;
+            }
+
+            var mappingUserInstance = _mapper.Map<User>(updateUserReq);
+            var updatedPropertiesNames = CompareChangesHelper.GetDiffPropertiesFrom(mappingUserInstance, existingUser, nameof(User.Id), nameof(User.RoleId));
+
+            // Cập nhật thông tin user từ UpdateUserReq
+            existingUser.FirstName = updateUserReq.FirstName ?? existingUser.FirstName;
+            existingUser.LastName = updateUserReq.LastName ?? existingUser.LastName;
+            existingUser.Username = updateUserReq.Username ?? existingUser.Username;
+            existingUser.Email = updateUserReq.Email ?? existingUser.Email;
+
+            // Upload avatar lên Cloudinary nếu có
+            if (updateUserReq.Avatar != null)
+            {
+                string avatarUrl = await _helperCloudinary.UploadAvatarAsync(updateUserReq.Avatar);
+                existingUser.Avatar = avatarUrl;
+            }
+
+            // Cập nhật thông tin userinfo
+            if (existingUser.Userinfo == null)
+            {
+                existingUser.Userinfo = new Userinfo { UserId = existingUser.Id };
+            }
+
+            var userinfo = existingUser.Userinfo;
+
+            userinfo.Country = updateUserReq.Country ?? userinfo.Country;
+            userinfo.City = updateUserReq.City ?? userinfo.City;
+            userinfo.Street = updateUserReq.Street ?? userinfo.Street;
+            userinfo.HomeNumber = updateUserReq.HomeNumber ?? userinfo.HomeNumber;
+            userinfo.PhoneNumber = updateUserReq.PhoneNumber ?? userinfo.PhoneNumber;
+
+
+            // Gọi phương thức UpdateAsync của UserRepository
+            var updateRes = await _userRepository.UpdateAsync(existingUser);
+
+            var dataRes = _mapper.Map<UpdateUserRsp>(existingUser);
+            dataRes.FieldsChanged = updatedPropertiesNames;
+
+            if (updateRes.Success)
+            {
+                res.Resutls = dataRes;
+            }
+            else
+            {
+                res.SetError(updateRes.Message);
+            }
+
+            return res;
+        }
+
+
+
 
     }
 

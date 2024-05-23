@@ -1,5 +1,5 @@
 ﻿using BLL;
-using Common.Req;
+using Common.Req.OrderReq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -27,10 +27,9 @@ namespace MSISTORE.WEB.Controllers
             var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 
-            // Thực hiện tạo đơn hàng
-            await orderService.createOrderAsync(userId, new List<OrderRequest> { orderRequest });
+           var orderDto =  await orderService.createOrderAsync(userId, new List<OrderRequest> { orderRequest });
 
-            return Ok(orderRequest);
+            return Ok(orderDto);
         }
 
 
