@@ -1,9 +1,12 @@
-﻿using Common.Rsp;
+﻿using AutoMapper;
+using Common.Rsp;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using QLBH.Common.DAL;
 using QLBH.Common.Req;
 using QLBH.Common.Rsp;
+
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -14,6 +17,8 @@ namespace DAL
 {
     public class ProductRepository : GenericRep<msistoreContext, Product>
     {
+        private IMapper _mapper;
+
         # region -- Overrides--------
         public override Product Read(int id)
         {
@@ -104,10 +109,20 @@ namespace DAL
             }
             int count = query.Count();
 
-            res.Results = query.ToList();
+
+            query = query.Include(p => p.Images);
+            var products = query.ToList();
+            res.Results = products;
             res.Count = count;
             return res;
         }
-        # endregion
+        public SingleRsp GetProductById(int id)
+        {
+            var res = new SingleRsp();
+            var query = All.AsQueryable().Where(p => p.Id == id).Include(x => x.Images).First();
+            res.Resutls = query;
+            return res;
+        }
+        #endregion
     }
 }

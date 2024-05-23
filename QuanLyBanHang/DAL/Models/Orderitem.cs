@@ -3,7 +3,7 @@ using System.Collections.Generic;
 
 namespace DAL.Models
 {
-    public partial class OrderItem
+    public partial class Orderitem
     {
         public long Id { get; set; }
         public string Quantity { get; set; } = null!;

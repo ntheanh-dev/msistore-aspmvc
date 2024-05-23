@@ -9,7 +9,7 @@ namespace MSISTORE.WEB.Models
         public string Password { get; set; } = null!;
         public DateTime? LastLogin { get; set; }
         public short IsSuperuser { get; set; }
-        public string UserName { get; set; } = null!;
+        public string Username { get; set; } = null!;
         public string FirstName { get; set; } = null!;
         public string LastName { get; set; } = null!;
         public string Email { get; set; } = null!;

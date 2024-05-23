@@ -1,16 +1,14 @@
-﻿using System;
+﻿using DAL.Models;
+using System;
 using System.Collections.Generic;
+using System.Linq;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace DAL.Models
+namespace BLL.DTOs
 {
-    public partial class Product
+    public class ProductDTO
     {
-        public Product()
-        {
-            Images = new HashSet<Image>();
-            Orderitems = new HashSet<Orderitem>();
-        }
-
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -25,7 +23,6 @@ namespace DAL.Models
 
         public virtual Brand? Brand { get; set; }
         public virtual Category Category { get; set; } = null!;
-        public virtual ICollection<Image> Images { get; set; }
-        public virtual ICollection<Orderitem> Orderitems { get; set; }
+        public List<ImageDTO> Images { get; set; }
     }
 }

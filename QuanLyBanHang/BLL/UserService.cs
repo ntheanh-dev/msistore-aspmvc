@@ -39,7 +39,7 @@ namespace BLL
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            var users = await userRepository.FindAsync(u => u.UserName == username);
+            var users = await userRepository.FindAsync(u => u.Username == username);
             return users.FirstOrDefault();
         }
 
@@ -54,7 +54,7 @@ namespace BLL
                 FirstName = userReq.FirstName,
                 LastName = userReq.LastName,
                 Email = userReq.Email,
-                UserName = userReq.Username,
+                Username = userReq.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(userReq.Password),
                 RoleId = userReq.RoleId
             };
@@ -119,7 +119,7 @@ namespace BLL
         {
             List<Claim> claims = new List<Claim> { 
 
-                new Claim(ClaimTypes.Name,user.UserName)
+                new Claim(ClaimTypes.Name,user.Username)
             }; ;
 
             var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
@@ -139,7 +139,7 @@ namespace BLL
         {
             var res = new SingleRsp();
 
-            var users = await userRepository.FindAsync(u => u.UserName == loginReq.Username);
+            var users = await userRepository.FindAsync(u => u.Username == loginReq.Username);
             var user = users.FirstOrDefault();
 
             // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
