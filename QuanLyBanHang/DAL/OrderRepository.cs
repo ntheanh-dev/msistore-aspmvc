@@ -17,32 +17,34 @@ namespace DAL
         {
             _context = context;
         }
-        public async Task<Order> createOrderAsync(int userId, List<OrderRequest> items)
-        {
-            using (var transaction = await _context.Database.BeginTransactionAsync())
-            {
-                try
-                {
-                    var order = new Order { 
-                        UserId = userId,
-                        CreatedAt = DateTime.UtcNow,
-                        UpdatedAt = DateTime.UtcNow,
-                        Uuid = Guid.NewGuid().ToString(),
-                        Orderitems = new List<Orderitem>()
-                    };
-                    foreach (var item in items)
-                    {
-                        var product = _context.Products.Find(item.ProductId);
-                    }
+        //public async Task<Order> createOrderAsync(int userId, List<OrderRequest> items)
+        //{
+        //    using (var transaction = await _context.Database.BeginTransactionAsync())
+        //    {
+        //        try
+        //        {
+        //            var order = new Order { 
+        //                UserId = userId,
+        //                CreatedAt = DateTime.UtcNow,
+        //                UpdatedAt = DateTime.UtcNow,
+        //                Uuid = Guid.NewGuid().ToString(),
+        //                Orderitems = new List<Orderitem>()
+        //            };
+        //            foreach (var item in items)
+        //            {
+        //                var product = _context.Products.Find(item.ProductId);
+        //                if(product == null) {
+        //                }
+        //            }
 
 
-                }catch (Exception ex)
-                {
-                    await transaction.RollbackAsync();
-                    throw new Exception("An error occurred while creating the order. Transaction rolled back.", ex);
-                }
-            }
+        //        }catch (Exception ex)
+        //        {
+        //            await transaction.RollbackAsync();
+        //            throw new Exception("An error occurred while creating the order. Transaction rolled back.", ex);
+        //        }
+        //    }
 
-        }
+        //}
     }
 }
