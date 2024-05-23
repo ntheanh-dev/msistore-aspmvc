@@ -49,7 +49,10 @@ namespace MSISTORE.WEB.Controllers
             }
 
             var userDto = new UserRsp { 
-                Username = username,
+                Id = user.Id,
+                Fristname = user.FirstName,
+                Lastname = user.LastName,
+                Username = user.Username,
                 Email = user.Email,
                 avatar = user.Avatar,
             };

@@ -4,18 +4,12 @@ using BLL.Token;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Common.Req;
-using Common.Rsp;
 using DAL;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using QLBH.Common.BLL;
 using QLBH.Common.Rsp;
-using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
-using System.Security.Cryptography;
-using System.Text;
 
 namespace BLL
 {
@@ -44,7 +38,7 @@ namespace BLL
             return users.FirstOrDefault();
         }
 
-       
+
 
         public async Task<UserDTO> CreateUserAsync(UserReq userReq)
         {
@@ -61,16 +55,16 @@ namespace BLL
             // Upload avatar to Cloudinary
             if (userReq.Avatar is not null)
             {
-         
+
                 string avatarUrl = await UploadAvatarAsync(userReq.Avatar);
                 newUser.Avatar = avatarUrl;
-               
+
             }
             Userinfo userinfo = new Userinfo
             {
                 UserId = newUser.Id
             };
-            var result =  await userRepository.AddUserAsync(newUser,userinfo);
+            var result = await userRepository.AddUserAsync(newUser, userinfo);
             if (!result.Success)
             {
                 // Handle error
@@ -115,7 +109,7 @@ namespace BLL
 
             return uploadResult?.SecureUrl?.ToString();
         }
-      
+
 
         public async Task<SingleRsp> AuthenticateJWTAsync(LoginReq loginReq)
         {

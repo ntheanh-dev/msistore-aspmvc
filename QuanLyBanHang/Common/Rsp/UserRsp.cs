@@ -8,8 +8,9 @@ namespace Common.Rsp
 {
     public class UserRsp
     {
-        public string LastName { get; set; } = null!;
-        public string FirstName { get; set; } = null!;
+        public long Id { get; set; }
+        public string Fristname { get; set; }
+        public string Lastname { get; set; }
         public string Username { get; set; }
         public string Email { get; set; }
         public string avatar { get; set; }
