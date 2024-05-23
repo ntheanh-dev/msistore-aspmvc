@@ -8,8 +8,8 @@ namespace Common.Req
 {
     public class OrderRequest
     {
-        public int ProductId { get; set; }
+        public long ProductId { get; set; }
 
-        public int Quantity { get; set; }
+        public string Quantity { get; set; }
     }
 }

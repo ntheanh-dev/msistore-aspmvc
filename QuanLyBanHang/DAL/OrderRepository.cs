@@ -1,50 +1,68 @@
 ﻿using Common.Req;
 using DAL.Models;
-using QLBH.Common.BLL;
 using QLBH.Common.DAL;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class OrderRepository: GenericRep<msistoreContext,Order>
+    public class OrderRepository : GenericRep<msistoreContext, Order>
     {
-        private readonly msistoreContext _context;
-        public OrderRepository(msistoreContext context)
+
+        public async Task<Order> CreateOrderAsync(long userId, List<OrderRequest> items)
         {
-            _context = context;
+            using (var context = new msistoreContext())
+            {
+                using (var transaction = await context.Database.BeginTransactionAsync())
+                {
+                    try
+                    {
+                        var user = await context.Userinfos.FindAsync(userId);
+                        if (user == null)
+                        {
+                            await transaction.RollbackAsync();
+                            throw new Exception($"User with ID {userId} not found");
+                        }
+                        var order = new Order
+                        {
+                            UserId = userId,
+                            User = user,
+                            CreatedAt = DateTime.UtcNow,
+                            UpdatedAt = DateTime.UtcNow,
+                            Uuid = Guid.NewGuid().ToString().Substring(0, 30),
+                            Orderitems = new List<Orderitem>()
+                        };
+
+                        foreach (var item in items)
+                        {
+                            var product = await context.Products.FindAsync(item.ProductId);
+                            if (product == null)
+                            {
+                                await transaction.RollbackAsync();
+                                throw new Exception($"Product with ID {item.ProductId} not found");
+                            }
+
+                            var orderItem = new Orderitem
+                            {
+                                ProdcutId = product.Id,
+                                Quantity = item.Quantity,
+                                Order = order
+                            };
+
+                            order.Orderitems.Add(orderItem);
+                        }
+
+                        context.Orders.Add(order);
+                        await context.SaveChangesAsync();
+
+                        await transaction.CommitAsync();
+                        return order;
+                    }
+                    catch (Exception ex)
+                    {
+                        await transaction.RollbackAsync();
+                        throw new Exception("Failed to create order", ex);
+                    }
+                }
+            }
         }
-        //public async Task<Order> createOrderAsync(int userId, List<OrderRequest> items)
-        //{
-        //    using (var transaction = await _context.Database.BeginTransactionAsync())
-        //    {
-        //        try
-        //        {
-        //            var order = new Order { 
-        //                UserId = userId,
-        //                CreatedAt = DateTime.UtcNow,
-        //                UpdatedAt = DateTime.UtcNow,
-        //                Uuid = Guid.NewGuid().ToString(),
-        //                Orderitems = new List<Orderitem>()
-        //            };
-        //            foreach (var item in items)
-        //            {
-        //                var product = _context.Products.Find(item.ProductId);
-        //                if(product == null) {
-        //                }
-        //            }
-
-
-        //        }catch (Exception ex)
-        //        {
-        //            await transaction.RollbackAsync();
-        //            throw new Exception("An error occurred while creating the order. Transaction rolled back.", ex);
-        //        }
-        //    }
-
-        //}
     }
 }
