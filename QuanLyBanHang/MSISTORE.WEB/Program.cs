@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL;
+using BLL.Token;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -45,7 +46,9 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<UserService>(); 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
 
 var app = builder.Build();

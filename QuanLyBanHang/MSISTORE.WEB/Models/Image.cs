@@ -8,8 +8,8 @@ namespace MSISTORE.WEB.Models
         public long Id { get; set; }
         public string File { get; set; } = null!;
         public short Preview { get; set; }
-        public long ProductId { get; set; }
+        public long ProdcutId { get; set; }
 
-        public virtual Product Product { get; set; } = null!;
+        public virtual Product Prodcut { get; set; } = null!;
     }
 }

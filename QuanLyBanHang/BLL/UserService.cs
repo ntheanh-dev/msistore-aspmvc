@@ -1,5 +1,6 @@
 ﻿using AutoMapper;
 using BLL.DTOs;
+using BLL.Token;
 using CloudinaryDotNet;
 using CloudinaryDotNet.Actions;
 using Common.Req;
@@ -39,7 +40,7 @@ namespace BLL
 
         public async Task<User> GetUserByUsernameAsync(string username)
         {
-            var users = await userRepository.FindAsync(u => u.UserName == username);
+            var users = await userRepository.FindAsync(u => u.Username == username);
             return users.FirstOrDefault();
         }
 
@@ -50,11 +51,10 @@ namespace BLL
 
             User newUser = new User
             {
-
                 FirstName = userReq.FirstName,
                 LastName = userReq.LastName,
                 Email = userReq.Email,
-                UserName = userReq.Username,
+                Username = userReq.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(userReq.Password),
                 RoleId = userReq.RoleId
             };
@@ -68,7 +68,7 @@ namespace BLL
             }
             Userinfo userinfo = new Userinfo
             {
-                UserId = (long)newUser.Id
+                UserId = newUser.Id
             };
             var result =  await userRepository.AddUserAsync(newUser,userinfo);
             if (!result.Success)
@@ -115,31 +115,13 @@ namespace BLL
 
             return uploadResult?.SecureUrl?.ToString();
         }
-        private string GenerateJwtToken(User user)
-        {
-            List<Claim> claims = new List<Claim> { 
-
-                new Claim(ClaimTypes.Name,user.UserName)
-            }; ;
-
-            var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_configuration["Jwt:Key"]));
-            var creds = new SigningCredentials(key, SecurityAlgorithms.HmacSha256);
-
-            var token = new JwtSecurityToken(
-                issuer: _configuration["Jwt:Issuer"],
-                audience: _configuration["Jwt:Audience"],
-                claims: claims,
-                expires: DateTime.Now.AddMinutes(30),
-                signingCredentials: creds);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
+      
 
         public async Task<SingleRsp> AuthenticateJWTAsync(LoginReq loginReq)
         {
             var res = new SingleRsp();
 
-            var users = await userRepository.FindAsync(u => u.UserName == loginReq.Username);
+            var users = await userRepository.FindAsync(u => u.Username == loginReq.Username);
             var user = users.FirstOrDefault();
 
             // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
@@ -148,9 +130,14 @@ namespace BLL
                 res.SetError("Invalid credentials.");
                 return res;
             }
-            string token = GenerateJwtToken(user);
-          
-            res.Resutls = token;
+            var tokenService = new TokenService(_configuration);
+            var (accessToken, refreshToken) = tokenService.GenerateJwtToken(user);
+            res.Resutls = new
+            {
+                AccessToken = accessToken,
+                RefreshToken = refreshToken
+            };
+
             return res;
         }
 

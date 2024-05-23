@@ -15,7 +15,7 @@ namespace Common.Req
         public string Password { get; set; } = null!;
         public string Email { get; set; } = null!;
         public IFormFile? Avatar { get; set; }
-        public long RoleId { get; set; } = 3;
+        public long RoleId { get; set; } = 1;
 
        
     }

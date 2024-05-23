@@ -3,10 +3,10 @@ using System.Collections.Generic;
 
 namespace DAL.Models
 {
-    public partial class StatusOrder
+    public partial class Statusorder
     {
         public long Id { get; set; }
-        public DateTime CreateAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
         public short IsPaid { get; set; }
