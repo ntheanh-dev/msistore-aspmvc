@@ -10,7 +10,8 @@ namespace MSISTORE.WEB.Controllers
     public class CategoryController : ControllerBase
     {
         private CategoryService categoryService;
-        public CategoryController() {
+        public CategoryController()
+        {
             categoryService = new CategoryService();
         }
 

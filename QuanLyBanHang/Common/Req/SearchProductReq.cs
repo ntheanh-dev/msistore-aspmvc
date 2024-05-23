@@ -9,8 +9,8 @@ namespace QLBH.Common.Req
     {
         public int page { get; set; } = 0;
         public int page_size { get; set; } = 0;
-        public int cateId {get; set;} = 0;
-        public decimal fromPrice { get; set;} = decimal.Zero;
+        public int cateId { get; set; } = 0;
+        public decimal fromPrice { get; set; } = decimal.Zero;
         public decimal toPrice { get; set; } = decimal.Zero;
         public int limit { get; set; } = 0;
         public string kw { get; set; } = "";

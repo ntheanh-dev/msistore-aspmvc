@@ -8,7 +8,7 @@ using QLBH.Common.DAL;
 using System.Linq;
 namespace DAL
 {
-    public class CategoryRepository: GenericRep<msistoreContext,Category>
+    public class CategoryRepository : GenericRep<msistoreContext, Category>
     {
         public CategoryRepository() { }
 

@@ -9,10 +9,11 @@ using System.Text;
 using System.Threading.Tasks;
 namespace BLL
 {
-    public class CategoryService: GenericSvc<CategoryRepository,Category>
+    public class CategoryService : GenericSvc<CategoryRepository, Category>
     {
         private CategoryRepository categoryRepostiory;
-        public CategoryService() {
+        public CategoryService()
+        {
             categoryRepostiory = new CategoryRepository();
         }
         public override SingleRsp Read(int id)

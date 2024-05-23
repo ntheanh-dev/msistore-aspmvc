@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class msistoreContext : DbContext
     {

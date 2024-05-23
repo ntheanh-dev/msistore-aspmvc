@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
-    public partial class StatusOrder
+    public partial class MsistoreStatusorder
     {
         public long Id { get; set; }
-        public DateTime CreateAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
         public short IsPaid { get; set; }
@@ -15,6 +15,6 @@ namespace DAL.Models
         public string PaymentMethod { get; set; } = null!;
         public long OrderId { get; set; }
 
-        public virtual Order Order { get; set; } = null!;
+        public virtual MsistoreOrder Order { get; set; } = null!;
     }
 }

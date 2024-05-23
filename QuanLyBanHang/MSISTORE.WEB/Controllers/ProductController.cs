@@ -26,7 +26,7 @@ namespace MSISTORE.WEB.Controllers
             return Ok(res);
         }
         [HttpGet("")]
-        public IActionResult SearchProduct([FromQuery]SearchProductReq searchProductReq)
+        public IActionResult SearchProduct([FromQuery] SearchProductReq searchProductReq)
         {
             var lastRecord = productService.GetLastRecord();
             Console.WriteLine("Last record: " + lastRecord.Id.ToString());

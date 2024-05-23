@@ -12,10 +12,11 @@ using System.Threading.Tasks;
 
 namespace BLL
 {
-    public class ProductService:GenericSvc<ProductRepository,Product>
+    public class ProductService : GenericSvc<ProductRepository, Product>
     {
         private ProductRepository repostiory;
-        public ProductService() {
+        public ProductService()
+        {
             repostiory = new ProductRepository();
         }
 
@@ -34,10 +35,11 @@ namespace BLL
             var res = new SingleRsp();
 
             var m1 = m.Id > 0 ? _rep.Read((int)m.Id) : null;
-            if(m1 == null)
+            if (m1 == null)
             {
                 res.SetError("EZ103", "No data");
-            }else
+            }
+            else
             {
                 res = base.Update(m);
                 res.Resutls = m;
@@ -48,7 +50,8 @@ namespace BLL
         #endregion
 
         #region -- Methods----
-        public SingleRsp CreateProduct(ProductRequest product) {
+        public SingleRsp CreateProduct(ProductRequest product)
+        {
             var res = new SingleRsp();
             Product newP = new Product();
             newP.Id = product.Id;

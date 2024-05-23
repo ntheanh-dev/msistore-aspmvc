@@ -1,16 +1,15 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
-    public partial class OrderItem
+    public partial class Image
     {
         public long Id { get; set; }
-        public string Quantity { get; set; } = null!;
-        public long OrderId { get; set; }
+        public string File { get; set; } = null!;
+        public short Preview { get; set; }
         public long ProductId { get; set; }
 
-        public virtual Order Order { get; set; } = null!;
         public virtual Product Product { get; set; } = null!;
     }
 }

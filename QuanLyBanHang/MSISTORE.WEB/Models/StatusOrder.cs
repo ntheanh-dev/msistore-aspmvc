@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class StatusOrder
     {

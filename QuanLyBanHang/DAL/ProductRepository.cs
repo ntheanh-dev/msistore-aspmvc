@@ -12,7 +12,7 @@ using System.Threading.Tasks;
 
 namespace DAL
 {
-    public class ProductRepository: GenericRep<msistoreContext, Product>
+    public class ProductRepository : GenericRep<msistoreContext, Product>
     {
         # region -- Overrides--------
         public override Product Read(int id)
@@ -34,9 +34,9 @@ namespace DAL
         public SingleRsp CreateProduct(Product product)
         {
             var res = new SingleRsp();
-            using(var context = new msistoreContext())
+            using (var context = new msistoreContext())
             {
-                using(var tran = context.Database.BeginTransaction())
+                using (var tran = context.Database.BeginTransaction())
                 {
                     try
                     {
@@ -93,13 +93,13 @@ namespace DAL
             int total = query.Count();
 
             // Calculate total pages
-            if(request.page != 0  && request.page_size != 0)
+            if (request.page != 0 && request.page_size != 0)
             {
-               int totalPages = (int)Math.Ceiling((double)total / request.page_size);
+                int totalPages = (int)Math.Ceiling((double)total / request.page_size);
 
-               //// Pagination
-               query = query.Skip((request.page - 1) * request.page_size).Take(request.page_size);
-               res.Total_pages = totalPages;   
+                //// Pagination
+                query = query.Skip((request.page - 1) * request.page_size).Take(request.page_size);
+                res.Total_pages = totalPages;
 
             }
             int count = query.Count();
