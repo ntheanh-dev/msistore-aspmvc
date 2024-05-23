@@ -72,6 +72,12 @@ namespace BLL
             return res;
         }
 
+        public SingleRsp GetProductById(int id)
+        {
+            var res = repostiory.GetProductById(id);
+            return res;
+        }
+
         public Product GetLastRecord()
         {
             return repostiory.GetLastRecord();
