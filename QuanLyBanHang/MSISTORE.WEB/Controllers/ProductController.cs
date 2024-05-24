@@ -14,9 +14,9 @@ namespace MSISTORE.WEB.Controllers
     public class ProductController : ControllerBase
     {
         private ProductService productService;
-        public ProductController()
+        public ProductController(IMapper mapper)
         {
-            this.productService = new ProductService();
+            this.productService = new ProductService(mapper);
 
         }
         [HttpPost("create-product")]
