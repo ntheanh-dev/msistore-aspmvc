@@ -5,6 +5,11 @@ namespace DAL.Models
 {
     public partial class User
     {
+        public User()
+        {
+            Feedbacks = new HashSet<Feedback>();
+        }
+
         public long Id { get; set; }
         public string Password { get; set; } = null!;
         public DateTime? LastLogin { get; set; }
@@ -18,5 +23,6 @@ namespace DAL.Models
 
         public virtual Role Role { get; set; } = null!;
         public virtual Userinfo? Userinfo { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
     }
 }
