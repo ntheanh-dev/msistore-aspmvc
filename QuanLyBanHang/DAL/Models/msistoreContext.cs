@@ -200,6 +200,9 @@ namespace DAL.Models
             {
                 entity.ToTable("user", "msistoredb");
 
+                entity.HasIndex(e => e.Username, "UQ_Username")
+                    .IsUnique();
+
                 entity.HasIndex(e => e.RoleId, "msistore_user_RoleId_ebd2668b_fk_msistore_RoleId");
 
                 entity.HasIndex(e => e.Username, "user$Username")
