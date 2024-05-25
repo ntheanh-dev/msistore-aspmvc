@@ -11,9 +11,11 @@ namespace MSISTORE.WEB.Controllers
     public class OrderController : Controller
     {
         private readonly OrderService orderService;
+        private readonly OrderitemService orderitemService;
         public OrderController()
         {
             this.orderService = new OrderService();
+            this.orderitemService = new OrderitemService();
         }
         [HttpPost("order")]
         [Authorize]
@@ -29,6 +31,35 @@ namespace MSISTORE.WEB.Controllers
 
            var orderDto =  await orderService.createOrderAsync(userId, orderRequests);
             return Ok(orderDto);
+        }
+
+        [HttpGet("order")]
+        [Authorize]
+        public async Task<IActionResult> GetOrdersByUser()
+        {
+            if (!User.Identity.IsAuthenticated || User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+
+            var listOrder = await orderService.GetOrdersByUser(userId);
+            return Ok(listOrder);
+        }
+
+        [HttpGet("order/{orderId:long}")]
+        [Authorize]
+        public async Task<IActionResult> GetItems([FromRoute] long orderId)
+        {
+            if (!User.Identity.IsAuthenticated || User.FindFirst(ClaimTypes.NameIdentifier) == null)
+            {
+                return Unauthorized("User is not authenticated.");
+            }
+
+            var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+            var items = await orderitemService.GetItems(orderId, userId);
+            return Ok(items); 
         }
 
 

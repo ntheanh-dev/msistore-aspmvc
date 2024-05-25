@@ -22,7 +22,7 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddBLLServices();
+builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
 
 // Cors 
 builder.Services.AddCors(options =>
@@ -68,9 +68,12 @@ builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// Use authentication and authorization
+// Sử dụng xác thực và ủy quyền
 app.UseAuthentication();
+app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -78,6 +81,16 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "Admin",
+      pattern: "{area:exists}/{controller}/{action}/"
+    );
+});
 
 app.UseCors(MyAllowSpecificOrigins);
 

@@ -1,0 +1,24 @@
+﻿@model MSISTORE.WEB.Areas.Admin.Models.LoginModel
+@{
+    ViewData["Title"] = "Đăng nhập";
+}
+
+<h1 class="text-center">Đăng nhập</h1>
+
+<form method="post" action="/admin/home/login">
+    <div class="form-group">
+        <label for="username">Tên đăng nhập:</label>
+        <input type="text" class="form-control" id="username" name="Username">
+    </div>
+    <div class="form-group">
+        <label for="password">Mật khẩu:</label>
+        <input type="password" class="form-control" id="password" name="Password">
+    </div>
+    @if (@ViewBag.LoginFail != null)
+    {
+        <div class="alert alert-danger mt-3">
+            <strong>@ViewBag.LoginFail</strong>
+        </div>
+    }
+    <button type="submit" class="btn btn-primary my-3">Đăng nhập</button>
+</form>
