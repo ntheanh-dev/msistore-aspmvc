@@ -1,15 +1,11 @@
-﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.IdentityModel.Tokens;
-using Microsoft.OpenApi.Models;
-using System;
-using System.Text;
-using System.Text.Json.Serialization;
+﻿using AutoMapper;
 using BLL;
 using BLL.Token;
-using AutoMapper;
-using System.Text.Json;
-using System.Net.Http;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
+using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -23,8 +19,20 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
+builder.Services.AddMvc();
+builder.Services.AddControllersWithViews();
 
-// Cors 
+//session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie session được xem là bắt buộc
+    options.Cookie.HttpOnly = true; // Không cho phép script JavaScript truy cập cookie session
+    options.Cookie.SameSite = SameSiteMode.Strict; // Xác định cách thức cookie session được gửi đến các trang web khác
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Sử dụng HTTPS để gửi cookie session
+    options.IdleTimeout = TimeSpan.FromSeconds(300); // Đặt thời gian timeout cho session là 300 giây (5 phút)
+});
+
+//Cors 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins, builder =>
@@ -35,7 +43,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Configure JWT
+// Cấu hình JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -59,16 +67,12 @@ builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 builder.Services.AddScoped<MapService>();
 builder.Services.AddScoped<OrderService>();
-
-// Add AutoMapper
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
-// Add HttpClient
 builder.Services.AddHttpClient();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-// Sử dụng xác thực và ủy quyền
+//Sử dụng xác thực và ủy quyền
 app.UseAuthentication();
 app.UseRouting();
 app.UseSession();
@@ -95,6 +99,7 @@ app.UseEndpoints(endpoints =>
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
+
 
 app.MapControllers();
 app.Run();
