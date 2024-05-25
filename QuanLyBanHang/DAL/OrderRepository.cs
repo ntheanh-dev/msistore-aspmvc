@@ -16,11 +16,26 @@ namespace DAL
                 {
                     try
                     {
+                        // Check if user exists
                         var user = await context.Userinfos.FindAsync(userId);
                         if (user == null)
                         {
-                            await transaction.RollbackAsync();
-                            throw new Exception($"User with ID {userId} not found");
+                            throw new Exception("Not Found User");
+                        }
+
+                        // Update user info if provided in the order request
+                        foreach (var item in items)
+                        {
+                            if (!string.IsNullOrEmpty(item.Country))
+                                user.Country = item.Country;
+                            if (!string.IsNullOrEmpty(item.City))
+                                user.City = item.City;
+                            if (!string.IsNullOrEmpty(item.Street))
+                                user.Street = item.Street;
+                            if (!string.IsNullOrEmpty(item.HomeNumber))
+                                user.HomeNumber = item.HomeNumber;
+                            if (!string.IsNullOrEmpty(item.PhoneNumber))
+                                user.PhoneNumber = item.PhoneNumber;
                         }
 
                         var order = new Order
@@ -66,7 +81,7 @@ namespace DAL
                         }
 
                         context.Orders.Add(order);
-                        
+
                         await context.SaveChangesAsync();
 
                         await transaction.CommitAsync();
@@ -88,7 +103,8 @@ namespace DAL
         }
 
 
+
         //View Order from User
-        
+
     }
 }
