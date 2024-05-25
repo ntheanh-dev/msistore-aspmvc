@@ -1,4 +1,6 @@
-﻿using Common.Req;
+﻿using AutoMapper;
+using BLL.DTOs;
+using Common.Req;
 using DAL;
 using DAL.Models;
 using QLBH.Common.BLL;
@@ -15,8 +17,13 @@ namespace BLL
     public class ProductService : GenericSvc<ProductRepository, Product>
     {
         private ProductRepository repostiory;
-        public ProductService()
+
+
+        private readonly IMapper _mapper;
+
+        public ProductService(IMapper mapper)
         {
+            _mapper = mapper;
             repostiory = new ProductRepository();
         }
 
@@ -75,6 +82,7 @@ namespace BLL
         public SingleRsp GetProductById(int id)
         {
             var res = repostiory.GetProductById(id);
+            res.Resutls = _mapper.Map<ProductDTO>(res.Resutls);
             return res;
         }
 

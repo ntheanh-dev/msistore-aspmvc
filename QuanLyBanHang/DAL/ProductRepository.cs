@@ -112,7 +112,8 @@ namespace DAL
         public SingleRsp GetProductById(int id)
         {
             var res = new SingleRsp();
-            var query = All.AsQueryable().Where(p => p.Id == id).Include(x => x.Images).First();
+            var query = All.AsQueryable().Where(p => p.Id == id).Include(x => x.Images)
+                .Include(x => x.Feedbacks).ThenInclude(x => x.User).First();
             res.Resutls = query;
             return res;
         }

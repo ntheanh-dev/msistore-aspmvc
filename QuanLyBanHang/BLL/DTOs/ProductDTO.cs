@@ -4,7 +4,6 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-
 namespace BLL.DTOs
 {
     public class ProductDTO
@@ -24,5 +23,6 @@ namespace BLL.DTOs
         public virtual Brand? Brand { get; set; }
         public virtual Category Category { get; set; } = null!;
         public List<ImageDTO> Images { get; set; }
+        public List<FeedbackDTO> Feedbacks { get; set; }
     }
 }
