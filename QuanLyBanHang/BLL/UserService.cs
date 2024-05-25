@@ -82,7 +82,7 @@ namespace BLL
             var users = await _userRepository.FindAsync(u => u.Username == loginReq.Username);
             var user = users.FirstOrDefault();
 
-            // Kiểm tra nếu user không tồn tại hoặc mật khẩu không khớp
+            
             if (user == null || !BCrypt.Net.BCrypt.Verify(loginReq.Password, user.Password))
             {
                 res.SetError("Invalid credentials.");
@@ -92,6 +92,7 @@ namespace BLL
             var (accessToken, refreshToken) = tokenService.GenerateJwtToken(user);
             res.Resutls = new
             {
+                //
                 AccessToken = accessToken,
                 RefreshToken = refreshToken
             };
@@ -143,11 +144,13 @@ namespace BLL
             userinfo.HomeNumber = updateUserReq.HomeNumber ?? userinfo.HomeNumber;
             userinfo.PhoneNumber = updateUserReq.PhoneNumber ?? userinfo.PhoneNumber;
 
-
+            
             // Gọi phương thức UpdateAsync của UserRepository
             var updateRes = await _userRepository.UpdateAsync(existingUser);
 
             var dataRes = _mapper.Map<UpdateUserRsp>(existingUser);
+            
+
             dataRes.FieldsChanged = updatedPropertiesNames;
 
             if (updateRes.Success)

@@ -24,12 +24,15 @@ namespace MSISTORE.WEB.Controllers
             var res = await _userService.CreateUserAsync(userReq);
             return Ok(res);
         }
+
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginReq loginReq)
         {
             var res = await _userService.AuthenticateJWTAsync(loginReq);
             return Ok(res.Resutls);
         }
+
+
         [HttpGet("current-user")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()

@@ -20,6 +20,7 @@ namespace DAL.Models
         public virtual DbSet<Category> Categories { get; set; } = null!;
         public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
+        public virtual DbSet<Location> Locations { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<Orderitem> Orderitems { get; set; } = null!;
         public virtual DbSet<Product> Products { get; set; } = null!;
@@ -110,6 +111,25 @@ namespace DAL.Models
                     .HasForeignKey(d => d.ProdcutId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("image$msistore_image_ProdcutId_20c1b923_fk_msistore_ProdcutId");
+            });
+
+            modelBuilder.Entity<Location>(entity =>
+            {
+                entity.ToTable("location", "msistoredb");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.City).HasMaxLength(50);
+
+                entity.Property(e => e.Country).HasMaxLength(50);
+
+                entity.Property(e => e.PhoneNumber).HasMaxLength(15);
+
+                entity.Property(e => e.PostalCode).HasMaxLength(20);
+
+                entity.Property(e => e.StoreName).HasMaxLength(100);
+
+                entity.Property(e => e.Street).HasMaxLength(100);
             });
 
             modelBuilder.Entity<Order>(entity =>

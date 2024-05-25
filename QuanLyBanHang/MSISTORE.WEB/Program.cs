@@ -1,11 +1,15 @@
-﻿using AutoMapper;
-using BLL;
-using BLL.Token;
-using Microsoft.AspNetCore.Authentication.JwtBearer;
+﻿using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
+using Microsoft.OpenApi.Models;
+using System;
 using System.Text;
 using System.Text.Json.Serialization;
+using BLL;
+using BLL.Token;
+using AutoMapper;
+using System.Text.Json;
+using System.Net.Http;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
@@ -18,9 +22,9 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 });
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
+builder.Services.AddBLLServices();
 
-//Cors 
+// Cors 
 builder.Services.AddCors(options =>
 {
     options.AddPolicy(MyAllowSpecificOrigins, builder =>
@@ -31,7 +35,7 @@ builder.Services.AddCors(options =>
     });
 });
 
-// Cấu hình JWT
+// Configure JWT
 builder.Services.AddAuthentication(options =>
 {
     options.DefaultAuthenticateScheme = JwtBearerDefaults.AuthenticationScheme;
@@ -53,14 +57,18 @@ builder.Services.AddAuthentication(options =>
 
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
-
+builder.Services.AddScoped<MapService>();
 builder.Services.AddScoped<OrderService>();
 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
+// Add AutoMapper
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+// Add HttpClient
+builder.Services.AddHttpClient();
 
 var app = builder.Build();
 
-// Sử dụng xác thực và ủy quyền
+// Use authentication and authorization
 app.UseAuthentication();
 app.UseAuthorization();
 
