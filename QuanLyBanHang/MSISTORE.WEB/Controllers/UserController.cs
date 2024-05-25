@@ -21,7 +21,8 @@ namespace MSISTORE.WEB.Controllers
         [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser([FromForm] UserReq userReq)
         {
-            return Ok(await _userService.CreateUserAsync(userReq));
+            var res = await _userService.CreateUserAsync(userReq);
+            return Ok(res);
         }
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginReq loginReq)
@@ -39,7 +40,7 @@ namespace MSISTORE.WEB.Controllers
                 return Unauthorized();
             }
 
-            var user = await _userService.GetUserByUsernameAsync(username); // Sử dụng phương thức bất đồng bộ
+            var user = await _userService.GetUserByUsernameAsync(username); 
             if (user == null)
             {
                 return NotFound();
@@ -56,8 +57,16 @@ namespace MSISTORE.WEB.Controllers
             return Ok(userDto);
         }
         [HttpPatch("{userId:long}/update-user")]
+        [Authorize]
         public async Task<IActionResult> UpdateUser(long userId, [FromForm] UpdateUserReq updateReq)
         {
+            var jwtUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(jwtUserId) || userId != long.Parse(jwtUserId))
+            {
+                return Unauthorized("You are not authorized to update this user.");
+            }
+
             var res = await _userService.UpdateUserAsync(userId, updateReq);
 
             if (res.Success)
@@ -67,5 +76,6 @@ namespace MSISTORE.WEB.Controllers
 
             return BadRequest(res.Message);
         }
+
     }
 }

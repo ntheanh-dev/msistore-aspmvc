@@ -8,7 +8,7 @@ namespace DAL
     public class OrderRepository : GenericRep<msistoreContext, Order>
     {
         // Order
-        public async Task<(Order Order, List<Product> ProductOrdered)> CreateOrderAsync(long userId, List<OrderRequest> items)
+        public async Task<(Order order, List<Product> ProductOrdered)> CreateOrderAsync(long userId, OrderRequest orderRequest)
         {
             using (var context = new msistoreContext())
             {
@@ -16,80 +16,75 @@ namespace DAL
                 {
                     try
                     {
-                        // Check if user exists
+                        // Retrieve user information
                         var user = await context.Userinfos.FindAsync(userId);
                         if (user == null)
                         {
-                            throw new Exception("Not Found User");
+                            throw new Exception("User not found");
                         }
 
-                        // Update user info if provided in the order request
-                        foreach (var item in items)
-                        {
-                            if (!string.IsNullOrEmpty(item.Country))
-                                user.Country = item.Country;
-                            if (!string.IsNullOrEmpty(item.City))
-                                user.City = item.City;
-                            if (!string.IsNullOrEmpty(item.Street))
-                                user.Street = item.Street;
-                            if (!string.IsNullOrEmpty(item.HomeNumber))
-                                user.HomeNumber = item.HomeNumber;
-                            if (!string.IsNullOrEmpty(item.PhoneNumber))
-                                user.PhoneNumber = item.PhoneNumber;
-                        }
+                        Order order = null;
 
-                        var order = new Order
+                        foreach (var orderItem in orderRequest.OrderItems)
                         {
-                            UserId = userId,
-                            User = user,
-                            CreatedAt = DateTime.UtcNow,
-                            UpdatedAt = DateTime.UtcNow,
-                            Uuid = Guid.NewGuid().ToString().Substring(0, 30),
-                            Orderitems = new List<Orderitem>()
-                        };
-
-                        foreach (var item in items)
-                        {
-                            var product = await context.Products.FindAsync(item.ProductId);
+                            // Find the product
+                            var product = await context.Products.FindAsync(orderItem.ProductId);
                             if (product == null)
                             {
                                 await transaction.RollbackAsync();
-                                throw new Exception($"Product with ID {item.ProductId} not found");
+                                throw new Exception($"Product with ID {orderItem.ProductId} not found");
                             }
 
-                            var orderItem = new Orderitem
+                            // Create order only once
+                            order ??= new Order
                             {
-                                ProdcutId = product.Id,
-                                Quantity = item.Quantity,
-                                Order = order,
-                                UnitPrice = product.NewPrice
-                            };
-                            var statusOrder = new Statusorder
-                            {
+                                UserId = userId,
+                                User = user,
                                 CreatedAt = DateTime.UtcNow,
                                 UpdatedAt = DateTime.UtcNow,
-                                IsActive = 1,
-                                IsPaid = 0,
-                                DeliveryMethod = item.DeliveryMethod,
-                                DeliveryStage = item.DeliveryStage,
-                                PaymentMethod = item.PaymentMethod,
-                                Order = order
+                                Uuid = Guid.NewGuid().ToString().Substring(0, 30),
+                                Orderitems = new List<Orderitem>()
                             };
 
-                            order.Orderitems.Add(orderItem);
-                            context.Statusorders.Add(statusOrder);
+                            // Add order item for each quantity of the product
+                            for (int i = 0; i < orderItem.Quantity; i++)
+                            {
+                                var orderItemEntity = new Orderitem
+                                {
+                                    ProdcutId = product.Id,
+                                    Quantity = 1,
+                                    Order = order,
+                                    UnitPrice = product.NewPrice
+                                };
+
+                                var statusOrder = new Statusorder
+                                {
+                                    CreatedAt = DateTime.UtcNow,
+                                    UpdatedAt = DateTime.UtcNow,
+                                    IsActive = 1,
+                                    IsPaid = 0,
+                                    DeliveryMethod = orderRequest.DeliveryMethod,
+                                    DeliveryStage = orderRequest.DeliveryStage,
+                                    PaymentMethod = orderRequest.PaymentMethod,
+                                    Order = order
+                                };
+
+                                order.Orderitems.Add(orderItemEntity);
+                                context.Statusorders.Add(statusOrder);
+                            }
+
                         }
 
-                        context.Orders.Add(order);
-
                         await context.SaveChangesAsync();
-
                         await transaction.CommitAsync();
+
+                        // Retrieve ordered products
+                        var productIds = orderRequest.OrderItems.Select(oi => oi.ProductId);
 
                         var productOrdered = await context.Products.AsNoTracking()
                             .Include(_ => _.Images)
-                            .Where(_ => order.Orderitems.Select(ot => ot.ProdcutId)
-                            .Contains(_.Id)).ToListAsync();
+                            .Where(p => productIds.Contains(p.Id))
+                            .ToListAsync();
 
                         return (order, productOrdered);
                     }
@@ -101,6 +96,10 @@ namespace DAL
                 }
             }
         }
+
+
+
+
 
 
 

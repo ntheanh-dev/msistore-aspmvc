@@ -120,7 +120,6 @@ namespace BLL
             // Cập nhật thông tin user từ UpdateUserReq
             existingUser.FirstName = updateUserReq.FirstName ?? existingUser.FirstName;
             existingUser.LastName = updateUserReq.LastName ?? existingUser.LastName;
-            existingUser.Username = updateUserReq.Username ?? existingUser.Username;
             existingUser.Email = updateUserReq.Email ?? existingUser.Email;
 
             // Upload avatar lên Cloudinary nếu có

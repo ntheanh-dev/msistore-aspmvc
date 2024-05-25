@@ -82,17 +82,17 @@ namespace DAL.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__feedback__order___6477ECF3");
+                    .HasConstraintName("FK__feedback__order___5165187F");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__feedback__produc__656C112C");
+                    .HasConstraintName("FK__feedback__produc__52593CB8");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__feedback__user_i__6383C8BA");
+                    .HasConstraintName("FK__feedback__user_i__534D60F1");
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -147,8 +147,6 @@ namespace DAL.Models
                 entity.HasIndex(e => e.ProdcutId, "msistore_orderitem_ProdcutId_98f2f5c8_fk_msistore_ProdcutId");
 
                 entity.Property(e => e.Id).HasColumnName("id");
-
-                entity.Property(e => e.Quantity).HasMaxLength(3);
 
                 entity.Property(e => e.UnitPrice).HasColumnType("money");
 

@@ -70,8 +70,7 @@ namespace DAL
 
                     existingUser.FirstName = updateUser.FirstName;
                     existingUser.LastName = updateUser.LastName;
-                    existingUser.Username = updateUser.Username;
-                    existingUser.Email = updateUser.Email;
+                    existingUser.Email = updateUser.Email;  
                     existingUser.Avatar = updateUser.Avatar;
 
                     if (updateUser.Userinfo != null)

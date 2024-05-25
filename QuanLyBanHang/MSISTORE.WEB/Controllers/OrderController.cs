@@ -17,7 +17,7 @@ namespace MSISTORE.WEB.Controllers
         }
         [HttpPost("order")]
         [Authorize]
-        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest orderRequest)
+        public async Task<IActionResult> CreateOrder([FromBody] OrderRequest orderRequests)
         {
             if (!User.Identity.IsAuthenticated || User.FindFirst(ClaimTypes.NameIdentifier) == null)
             {
@@ -27,8 +27,7 @@ namespace MSISTORE.WEB.Controllers
             var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
 
 
-           var orderDto =  await orderService.createOrderAsync(userId, new List<OrderRequest> { orderRequest });
-
+           var orderDto =  await orderService.createOrderAsync(userId, orderRequests);
             return Ok(orderDto);
         }
 
