@@ -1,4 +1,5 @@
-﻿using BLL.DTOs;
+﻿using AutoMapper;
+using BLL.DTOs;
 using Common.Req.OrderReq;
 using Common.Rsp;
 using DAL;
@@ -12,8 +13,10 @@ namespace BLL
     public class OrderService : GenericSvc<OrderRepository, Order>
     {
         private readonly OrderRepository _orderRepository;
-        public OrderService() { 
+        private readonly IMapper _mapper;
+        public OrderService(IMapper mapper) { 
             _orderRepository = new OrderRepository();
+            _mapper = mapper;
         }
         public async Task<OrderdDTO> createOrderAsync(long userId, OrderRequest order)
         {
@@ -40,19 +43,19 @@ namespace BLL
                     OrderItems = OrderEnitty.Orderitems.Select(orderItem => new OrderItemDTO
                     {
                         Items = new List<object>
-                {
-                    new
-                    {
-                        orderItem.Prodcut?.Id, // Assuming Product is a navigation property
-                        orderItem.Prodcut?.Name,
-                        orderItem.Quantity,
-                        Image = ProductOrdered.SelectMany(_ => _.Images)
-                            .Where(_ => _.Preview == 1)
-                            .Select(image => image.File)
-                            .FirstOrDefault(),
-                        orderItem.UnitPrice
-                    }
-                }
+                            {
+                                new
+                                {
+                                    orderItem.Prodcut?.Id, // Assuming Product is a navigation property
+                                    orderItem.Prodcut?.Name,
+                                    orderItem.Quantity,
+                                    Image = ProductOrdered.SelectMany(_ => _.Images)
+                                        .Where(_ => _.Preview == 1)
+                                        .Select(image => image.File)
+                                        .FirstOrDefault(),
+                                    orderItem.UnitPrice
+                                }
+                            }
 
                     }).ToList(),
                 };
@@ -68,8 +71,9 @@ namespace BLL
         public async Task<SingleRsp> GetOrdersByUser(long userId)
         {
             var rs = new SingleRsp();
-            var list = new List<OrderRsp>();
-            list = _orderRepository.GetOrdersByUser(userId);
+            List<Order> orders = _orderRepository.GetOrdersByUser(userId);
+            //var list = _mapper.Map<List<OrderRespDTO>>(orders);
+            var list = _orderRepository.GetOrdersByUser(userId);
             rs.SetData("200", list);
             return rs;
         }

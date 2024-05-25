@@ -71,6 +71,7 @@ builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 
 //Sử dụng xác thực và ủy quyền
 app.UseAuthentication();

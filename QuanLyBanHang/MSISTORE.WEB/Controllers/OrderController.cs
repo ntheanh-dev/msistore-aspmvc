@@ -1,4 +1,5 @@
-﻿using BLL;
+﻿using AutoMapper;
+using BLL;
 using Common.Req.OrderReq;
 using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authorization;
@@ -12,9 +13,9 @@ namespace MSISTORE.WEB.Controllers
     {
         private readonly OrderService orderService;
         private readonly OrderitemService orderitemService;
-        public OrderController()
+        public OrderController(IMapper mapper)
         {
-            this.orderService = new OrderService();
+            this.orderService = new OrderService(mapper);
             this.orderitemService = new OrderitemService();
         }
         [HttpPost("order")]

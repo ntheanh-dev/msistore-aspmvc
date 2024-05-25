@@ -17,6 +17,7 @@ namespace BLL.MappingProfiles
 
             CreateMap<Image, ImageDTO>().ReverseMap();
             CreateMap<Feedback, FeedbackDTO>().ReverseMap();
+            CreateMap<Order, OrderRespDTO>().ReverseMap();
         }
 
     }
