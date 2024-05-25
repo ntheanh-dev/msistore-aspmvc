@@ -1,7 +1,10 @@
-﻿using Common.Req.OrderReq;
+﻿using CloudinaryDotNet.Actions;
+using Common.Req.OrderReq;
+using Common.Rsp;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using QLBH.Common.DAL;
+using QLBH.Common.Rsp;
 
 namespace DAL
 {
@@ -97,13 +100,17 @@ namespace DAL
             }
         }
 
-
-
-
-
-
-
         //View Order from User
+        public List<OrderRsp> GetOrdersByUser(long userId)
+        {
+            return All.Where(x=>x.UserId == userId)
+                .Select(x => new OrderRsp
+                {
+                    Id = x.Id,
+                    CreatedAt = x.CreatedAt,
+                    UserId = x.UserId
+                }).ToList();
+        }
 
     }
 }

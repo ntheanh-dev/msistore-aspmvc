@@ -1,8 +1,10 @@
 ﻿using BLL.DTOs;
 using Common.Req.OrderReq;
+using Common.Rsp;
 using DAL;
 using DAL.Models;
 using QLBH.Common.BLL;
+using QLBH.Common.Rsp;
 using static System.Net.Mime.MediaTypeNames;
 
 namespace BLL
@@ -61,6 +63,15 @@ namespace BLL
             {
                 throw new Exception("Failed to create order.", ex);
             }
+        }
+
+        public async Task<SingleRsp> GetOrdersByUser(long userId)
+        {
+            var rs = new SingleRsp();
+            var list = new List<OrderRsp>();
+            list = _orderRepository.GetOrdersByUser(userId);
+            rs.SetData("200", list);
+            return rs;
         }
 
     }

@@ -33,7 +33,7 @@ namespace DAL.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-PBPP8VB\\SQLEXPRESS;Initial Catalog=msistore;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=msistore;Integrated Security=True");
             }
         }
 
@@ -82,17 +82,17 @@ namespace DAL.Models
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.OrderId)
-                    .HasConstraintName("FK__feedback__order___5165187F");
+                    .HasConstraintName("FK__feedback__order___3E52440B");
 
                 entity.HasOne(d => d.Product)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.ProductId)
-                    .HasConstraintName("FK__feedback__produc__52593CB8");
+                    .HasConstraintName("FK__feedback__produc__3F466844");
 
                 entity.HasOne(d => d.User)
                     .WithMany(p => p.Feedbacks)
                     .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK__feedback__user_i__534D60F1");
+                    .HasConstraintName("FK__feedback__user_i__403A8C7D");
             });
 
             modelBuilder.Entity<Image>(entity =>

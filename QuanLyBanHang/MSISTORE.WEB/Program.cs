@@ -74,9 +74,9 @@ var app = builder.Build();
 
 //Sử dụng xác thực và ủy quyền
 app.UseAuthentication();
-app.UseAuthorization();
 app.UseRouting();
 app.UseSession();
+app.UseAuthorization();
 
 
 // Configure the HTTP request pipeline.
@@ -85,6 +85,8 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+
 
 app.UseEndpoints(endpoints =>
 {
