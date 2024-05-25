@@ -18,6 +18,7 @@ namespace DAL.Models
 
         public virtual DbSet<Brand> Brands { get; set; } = null!;
         public virtual DbSet<Category> Categories { get; set; } = null!;
+        public virtual DbSet<Feedback> Feedbacks { get; set; } = null!;
         public virtual DbSet<Image> Images { get; set; } = null!;
         public virtual DbSet<Order> Orders { get; set; } = null!;
         public virtual DbSet<Orderitem> Orderitems { get; set; } = null!;
@@ -32,7 +33,7 @@ namespace DAL.Models
             if (!optionsBuilder.IsConfigured)
             {
 #warning To protect potentially sensitive information in your connection string, you should move it out of source code. You can avoid scaffolding the connection string by using the Name= syntax to read it from configuration - see https://go.microsoft.com/fwlink/?linkid=2131148. For more guidance on storing connection strings, see http://go.microsoft.com/fwlink/?LinkId=723263.
-                optionsBuilder.UseSqlServer("Data Source=DESKTOP-PBPP8VB\\SQLEXPRESS;Initial Catalog=msistore;Integrated Security=True");
+                optionsBuilder.UseSqlServer("Data Source=.;Initial Catalog=msistore;Integrated Security=True");
             }
         }
 
@@ -54,6 +55,44 @@ namespace DAL.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Name).HasMaxLength(50);
+            });
+
+            modelBuilder.Entity<Feedback>(entity =>
+            {
+                entity.ToTable("feedback", "msistoredb");
+
+                entity.Property(e => e.Id).HasColumnName("id");
+
+                entity.Property(e => e.Comment)
+                    .HasMaxLength(200)
+                    .HasColumnName("comment");
+
+                entity.Property(e => e.CreatedAt)
+                    .HasColumnType("date")
+                    .HasColumnName("createdAt");
+
+                entity.Property(e => e.OrderId).HasColumnName("order_id");
+
+                entity.Property(e => e.ProductId).HasColumnName("product_id");
+
+                entity.Property(e => e.Rating).HasColumnName("rating");
+
+                entity.Property(e => e.UserId).HasColumnName("user_id");
+
+                entity.HasOne(d => d.Order)
+                    .WithMany(p => p.Feedbacks)
+                    .HasForeignKey(d => d.OrderId)
+                    .HasConstraintName("FK__feedback__order___3E52440B");
+
+                entity.HasOne(d => d.Product)
+                    .WithMany(p => p.Feedbacks)
+                    .HasForeignKey(d => d.ProductId)
+                    .HasConstraintName("FK__feedback__produc__3F466844");
+
+                entity.HasOne(d => d.User)
+                    .WithMany(p => p.Feedbacks)
+                    .HasForeignKey(d => d.UserId)
+                    .HasConstraintName("FK__feedback__user_i__403A8C7D");
             });
 
             modelBuilder.Entity<Image>(entity =>
@@ -110,6 +149,8 @@ namespace DAL.Models
                 entity.Property(e => e.Id).HasColumnName("id");
 
                 entity.Property(e => e.Quantity).HasMaxLength(3);
+
+                entity.Property(e => e.UnitPrice).HasColumnType("money");
 
                 entity.HasOne(d => d.Order)
                     .WithMany(p => p.Orderitems)
@@ -197,6 +238,9 @@ namespace DAL.Models
             modelBuilder.Entity<User>(entity =>
             {
                 entity.ToTable("user", "msistoredb");
+
+                entity.HasIndex(e => e.Username, "UQ_Username")
+                    .IsUnique();
 
                 entity.HasIndex(e => e.RoleId, "msistore_user_RoleId_ebd2668b_fk_msistore_RoleId");
 

@@ -7,6 +7,7 @@ namespace DAL.Models
     {
         public Order()
         {
+            Feedbacks = new HashSet<Feedback>();
             Orderitems = new HashSet<Orderitem>();
             Statusorders = new HashSet<Statusorder>();
         }
@@ -19,6 +20,7 @@ namespace DAL.Models
         public long? UserId { get; set; }
 
         public virtual Userinfo? User { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<Orderitem> Orderitems { get; set; }
         public virtual ICollection<Statusorder> Statusorders { get; set; }
     }

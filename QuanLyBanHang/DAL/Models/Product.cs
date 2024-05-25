@@ -7,6 +7,7 @@ namespace DAL.Models
     {
         public Product()
         {
+            Feedbacks = new HashSet<Feedback>();
             Images = new HashSet<Image>();
             Orderitems = new HashSet<Orderitem>();
         }
@@ -25,6 +26,7 @@ namespace DAL.Models
 
         public virtual Brand? Brand { get; set; }
         public virtual Category Category { get; set; } = null!;
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<Image> Images { get; set; }
         public virtual ICollection<Orderitem> Orderitems { get; set; }
     }

@@ -19,6 +19,18 @@ builder.Services.AddControllers().AddJsonOptions(options =>
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
+builder.Services.AddMvc();
+builder.Services.AddControllersWithViews();
+
+//session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie session được xem là bắt buộc
+    options.Cookie.HttpOnly = true; // Không cho phép script JavaScript truy cập cookie session
+    options.Cookie.SameSite = SameSiteMode.Strict; // Xác định cách thức cookie session được gửi đến các trang web khác
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Sử dụng HTTPS để gửi cookie session
+    options.IdleTimeout = TimeSpan.FromSeconds(300); // Đặt thời gian timeout cho session là 300 giây (5 phút)
+});
 
 //Cors 
 builder.Services.AddCors(options =>
@@ -58,9 +70,12 @@ builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
-// Sử dụng xác thực và ủy quyền
+//Sử dụng xác thực và ủy quyền
 app.UseAuthentication();
 app.UseAuthorization();
+app.UseRouting();
+app.UseSession();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -68,6 +83,14 @@ if (app.Environment.IsDevelopment())
     app.UseSwagger();
     app.UseSwaggerUI();
 }
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "Admin",
+      pattern: "{area:exists}/{controller}/{action}/"
+    );
+});
 
 app.UseCors(MyAllowSpecificOrigins);
 
