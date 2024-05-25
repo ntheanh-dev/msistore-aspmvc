@@ -1,7 +1,9 @@
-﻿using Common.Req;
+﻿using BLL.DTOs;
+using Common.Req.OrderReq;
 using DAL;
 using DAL.Models;
 using QLBH.Common.BLL;
+using static System.Net.Mime.MediaTypeNames;
 
 namespace BLL
 {
@@ -11,19 +13,55 @@ namespace BLL
         public OrderService() { 
             _orderRepository = new OrderRepository();
         }
-        public async Task<Order> createOrderAsync(long userId,List<OrderRequest> orders)
+        public async Task<OrderdDTO> createOrderAsync(long userId, OrderRequest order)
         {
             try
             {
-                if(orders == null || orders.Count == 0)
+                if (order == null)
                 {
                     throw new ArgumentException("Order items cannot be null or empty.");
                 }
-                return await _orderRepository.CreateOrderAsync(userId, orders);
-            }catch (Exception ex)
+
+                var (OrderEnitty, ProductOrdered) = await _orderRepository.CreateOrderAsync(userId, order);
+
+                // Check for null
+                if (OrderEnitty == null || ProductOrdered == null)
+                {
+                    throw new Exception("Failed to retrieve order details.");
+                }
+
+                var orderDTO = new OrderdDTO
+                {
+                    UserId = OrderEnitty.UserId,
+                    CreatedAt = OrderEnitty.CreatedAt,
+                    UpdatedAt = OrderEnitty.UpdatedAt,
+                    OrderItems = OrderEnitty.Orderitems.Select(orderItem => new OrderItemDTO
+                    {
+                        Items = new List<object>
+                {
+                    new
+                    {
+                        orderItem.Prodcut?.Id, // Assuming Product is a navigation property
+                        orderItem.Prodcut?.Name,
+                        orderItem.Quantity,
+                        Image = ProductOrdered.SelectMany(_ => _.Images)
+                            .Where(_ => _.Preview == 1)
+                            .Select(image => image.File)
+                            .FirstOrDefault(),
+                        orderItem.UnitPrice
+                    }
+                }
+
+                    }).ToList(),
+                };
+
+                return orderDTO;
+            }
+            catch (Exception ex)
             {
                 throw new Exception("Failed to create order.", ex);
             }
         }
+
     }
 }

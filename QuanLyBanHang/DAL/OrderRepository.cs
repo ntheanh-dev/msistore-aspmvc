@@ -1,13 +1,14 @@
-﻿using Common.Req;
+﻿using Common.Req.OrderReq;
 using DAL.Models;
+using Microsoft.EntityFrameworkCore;
 using QLBH.Common.DAL;
 
 namespace DAL
 {
     public class OrderRepository : GenericRep<msistoreContext, Order>
     {
-
-        public async Task<Order> CreateOrderAsync(long userId, List<OrderRequest> items)
+        // Order
+        public async Task<(Order order, List<Product> ProductOrdered)> CreateOrderAsync(long userId, OrderRequest orderRequest)
         {
             using (var context = new msistoreContext())
             {
@@ -15,46 +16,77 @@ namespace DAL
                 {
                     try
                     {
+                        // Retrieve user information
                         var user = await context.Userinfos.FindAsync(userId);
                         if (user == null)
                         {
-                            await transaction.RollbackAsync();
-                            throw new Exception($"User with ID {userId} not found");
+                            throw new Exception("User not found");
                         }
-                        var order = new Order
-                        {
-                            UserId = userId,
-                            User = user,
-                            CreatedAt = DateTime.UtcNow,
-                            UpdatedAt = DateTime.UtcNow,
-                            Uuid = Guid.NewGuid().ToString().Substring(0, 30),
-                            Orderitems = new List<Orderitem>()
-                        };
 
-                        foreach (var item in items)
+                        Order order = null;
+
+                        foreach (var orderItem in orderRequest.OrderItems)
                         {
-                            var product = await context.Products.FindAsync(item.ProductId);
+                            // Find the product
+                            var product = await context.Products.FindAsync(orderItem.ProductId);
                             if (product == null)
                             {
                                 await transaction.RollbackAsync();
-                                throw new Exception($"Product with ID {item.ProductId} not found");
+                                throw new Exception($"Product with ID {orderItem.ProductId} not found");
                             }
 
-                            var orderItem = new Orderitem
+                            // Create order only once
+                            order ??= new Order
                             {
-                                ProdcutId = product.Id,
-                                Quantity = item.Quantity,
-                                Order = order
+                                UserId = userId,
+                                User = user,
+                                CreatedAt = DateTime.UtcNow,
+                                UpdatedAt = DateTime.UtcNow,
+                                Uuid = Guid.NewGuid().ToString().Substring(0, 30),
+                                Orderitems = new List<Orderitem>()
                             };
 
-                            order.Orderitems.Add(orderItem);
+                            // Add order item for each quantity of the product
+                            for (int i = 0; i < orderItem.Quantity; i++)
+                            {
+                                var orderItemEntity = new Orderitem
+                                {
+                                    ProdcutId = product.Id,
+                                    Quantity = 1,
+                                    Order = order,
+                                    UnitPrice = product.NewPrice
+                                };
+
+                                var statusOrder = new Statusorder
+                                {
+                                    CreatedAt = DateTime.UtcNow,
+                                    UpdatedAt = DateTime.UtcNow,
+                                    IsActive = 1,
+                                    IsPaid = 0,
+                                    DeliveryMethod = orderRequest.DeliveryMethod,
+                                    DeliveryStage = orderRequest.DeliveryStage,
+                                    PaymentMethod = orderRequest.PaymentMethod,
+                                    Order = order
+                                };
+
+                                order.Orderitems.Add(orderItemEntity);
+                                context.Statusorders.Add(statusOrder);
+                            }
+
                         }
 
-                        context.Orders.Add(order);
                         await context.SaveChangesAsync();
-
                         await transaction.CommitAsync();
-                        return order;
+
+                        // Retrieve ordered products
+                        var productIds = orderRequest.OrderItems.Select(oi => oi.ProductId);
+
+                        var productOrdered = await context.Products.AsNoTracking()
+                            .Include(_ => _.Images)
+                            .Where(p => productIds.Contains(p.Id))
+                            .ToListAsync();
+
+                        return (order, productOrdered);
                     }
                     catch (Exception ex)
                     {
@@ -64,5 +96,14 @@ namespace DAL
                 }
             }
         }
+
+
+
+
+
+
+
+        //View Order from User
+
     }
 }

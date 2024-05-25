@@ -66,6 +66,8 @@ builder.Services.AddAuthentication(options =>
 builder.Services.AddScoped<UserService>();
 builder.Services.AddScoped<TokenService>();
 
+builder.Services.AddScoped<OrderService>();
+
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
 
 var app = builder.Build();

@@ -2,16 +2,9 @@
 using Common.Rsp;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using QLBH.Common.DAL;
 using QLBH.Common.Req;
 using QLBH.Common.Rsp;
-
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace DAL
 {
@@ -119,10 +112,13 @@ namespace DAL
         public SingleRsp GetProductById(int id)
         {
             var res = new SingleRsp();
-            var query = All.AsQueryable().Where(p => p.Id == id).Include(x => x.Images).First();
+            var query = All.AsQueryable().Where(p => p.Id == id).Include(x => x.Images)
+                .Include(x => x.Feedbacks).ThenInclude(x => x.User).First();
             res.Resutls = query;
             return res;
         }
+       
+
         #endregion
     }
 }

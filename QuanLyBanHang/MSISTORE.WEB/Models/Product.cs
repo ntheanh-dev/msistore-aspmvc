@@ -1,13 +1,17 @@
-﻿using DAL.Models;
-using System;
+﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-namespace BLL.DTOs
+
+namespace MSISTORE.WEB.Models
 {
-    public class ProductDTO
+    public partial class Product
     {
+        public Product()
+        {
+            Feedbacks = new HashSet<Feedback>();
+            Images = new HashSet<Image>();
+            Orderitems = new HashSet<Orderitem>();
+        }
+
         public long Id { get; set; }
         public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
@@ -22,7 +26,8 @@ namespace BLL.DTOs
 
         public virtual Brand? Brand { get; set; }
         public virtual Category Category { get; set; } = null!;
-        public List<ImageDTO> Images { get; set; }
-        public List<FeedbackDTO> Feedbacks { get; set; }
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
+        public virtual ICollection<Image> Images { get; set; }
+        public virtual ICollection<Orderitem> Orderitems { get; set; }
     }
 }

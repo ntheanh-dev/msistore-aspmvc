@@ -5,7 +5,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
-namespace Common.Req
+namespace Common.Req.UserRequest
 {
     public class UserReq
     {
@@ -17,6 +17,6 @@ namespace Common.Req
         public IFormFile? Avatar { get; set; }
         public long RoleId { get; set; } = 1;
 
-       
+
     }
 }
