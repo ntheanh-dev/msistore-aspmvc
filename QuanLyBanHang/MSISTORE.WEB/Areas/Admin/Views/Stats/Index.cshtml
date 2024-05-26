@@ -1,0 +1,92 @@
+﻿@model MSISTORE.WEB.Areas.Admin.Models.StatsRsq
+@{
+	ViewBag.Title = "Thống kê doanh thu";
+	var DateRevenue = ViewBag.Result;
+}
+<h1 class="text-center text-info mt-1">@ViewBag.Title</h1>
+<div class="row">
+	<div class="col-md-5 col-12">
+		<form>
+			<div class="form-floating mb-3 mt-3">
+				<select class="form-select" id="year" name="year">
+					<option value="2023">2023</option>
+					<option value="2024" selected>2024</option>
+				</select>
+				<label for="period" class="form-label">Chọn năm</label>
+			</div>
+			<div class="form-floating mb-3 mt-3">
+				<select class="form-select" id="type" name="type">
+					<option value="MONTH" selected>Theo tháng</option>
+					<option value="QUARTER">Theo quý</option>
+				</select>
+				<label for="period" class="form-label">Chọn thời gian</label>
+			</div>
+			<div class="form-floating mb-3 mt-3">
+				<button class="btn btn-success">Lọc</button>
+			</div>
+		</form>
+		<table class="table table-striped">
+			<tr>
+				<th>Thời gian</th>
+				<th>Doanh thu</th>
+			</tr>
+			@if (DateRevenue != null)
+			{
+				foreach (var item in DateRevenue)
+				{
+					<tr>
+						<td>@item.Time</td>
+						<td>@String.Format("{0:0}", @item.Revenue)</td>
+					</tr>
+				}
+			}
+		</table>
+	</div>
+	<div class="col-md-7 col-12">
+		<canvas id="myChart"></canvas>
+	</div>
+</div>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<script>
+
+	let labels = []
+	let data = []
+	@foreach (var item in DateRevenue)
+	{
+		<text>
+			data.push(parseInt(@item.Revenue));
+			labels.push("@item.Time");
+		</text>
+	}
+
+		console.log("Labels: ", labels); // Debugging line
+	console.log("Data: ", data); // Debugging line
+
+	const ctx = document.getElementById('myChart');
+
+	function drawChart(ctx, labels, data) {
+		new Chart(ctx, {
+			type: 'bar',
+			data: {
+				labels: labels,
+				datasets: [{
+					label: 'Doanh thu',
+					data: data,
+					borderWidth: 1,
+					backgroundColor: ['red', 'green', 'blue', 'gold', 'orange']
+				}]
+			},
+			options: {
+				scales: {
+					y: {
+						beginAtZero: true
+					}
+				}
+			}
+		});
+	}
+
+	drawChart(ctx,labels,data)
+
+</script>
