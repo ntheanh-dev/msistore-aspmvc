@@ -101,15 +101,20 @@ namespace DAL
         }
 
         //View Order from User
-        public List<OrderRsp> GetOrdersByUser(long userId)
+        public List<Order> GetOrdersByUser(long userId)
         {
-            return All.Where(x=>x.UserId == userId)
-                .Select(x => new OrderRsp
-                {
-                    Id = x.Id,
-                    CreatedAt = x.CreatedAt,
-                    UserId = x.UserId
-                }).ToList();
+            //return All.Where(x => x.UserId == userId)
+            //    .Select(x => new OrderRsp
+            //    {
+            //        Id = x.Id,
+            //        CreatedAt = x.CreatedAt,
+            //        UserId = x.UserId
+            //    }).ToList();
+            return All.AsQueryable().Where(x => x.UserId == userId)
+                .Include(x => x.Orderitems).ThenInclude(x => x.Prodcut).ThenInclude(x => x.Feedbacks)
+                .Include(x => x.Orderitems).ThenInclude(oi => oi.Prodcut).ThenInclude(p => p.Images)
+                .Include(x => x.Statusorders)
+                .ToList();
         }
 
     }

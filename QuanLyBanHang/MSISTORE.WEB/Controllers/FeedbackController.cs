@@ -48,11 +48,10 @@ namespace MSISTORE.WEB.Controllers
             }
 
             var userId = long.Parse(User.FindFirst(ClaimTypes.NameIdentifier).Value);
-
             try
             {
                 var f = await _feedbackService.CreateFeedbackAsync(userId, feedback);
-                return Ok();
+                return Ok(f);
             }catch (Exception ex)
             {
                 return BadRequest(ex.Message);
