@@ -9,6 +9,9 @@
     <thead>
         <tr>
             <th>
+                @Html.DisplayNameFor(model => model.Images)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.CreatedAt)
             </th>
             <th>
@@ -44,6 +47,16 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+                <td>
+                    @if (item.Images != null && item.Images.Any())
+                    {
+                        <img src="@item.Images.FirstOrDefault().File" alt="Product Image" style="width: 100px; height: auto;" />
+                    }
+                    else
+                    {
+                        <span>No Image Available</span>
+                    }
+                </td>
             <td>
                 @Html.DisplayFor(modelItem => item.CreatedAt)
             </td>

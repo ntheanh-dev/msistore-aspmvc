@@ -18,13 +18,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
             //    return RedirectToAction("Login");
             //}
             //ViewBag.User = JsonConvert.DeserializeObject<User>(user);
-            var ds = da.Products.Include(p => p.Brand).Include(p => p.Category).OrderByDescending(p => p.Id).ToList();
+            var ds = da.Products.Include(p => p.Brand).Include(p => p.Category).Include(p=> p.Images).OrderByDescending(p => p.Id).ToList();
             return View(ds);
         }
 
         public ActionResult Details(int id)
         {
-            var p = da.Products.Include(p => p.Brand).Include(p => p.Category).FirstOrDefault(c => c.Id.Equals(id));
+            var p = da.Products.Include(p => p.Brand).Include(p => p.Category).Include(p=> p.Images).FirstOrDefault(c => c.Id.Equals(id));
             return View(p);
         }
 

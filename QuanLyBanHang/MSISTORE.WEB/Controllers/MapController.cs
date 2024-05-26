@@ -22,7 +22,7 @@ namespace MSISTORE.WEB.Controllers
             _httpClientFactory = httpClientFactory;
         }
 
-        [HttpGet("{longitude}/{latitude}")]
+        [HttpGet("/api/{longitude}/{latitude}")]
         public async Task<ActionResult<IEnumerable<Location>>> GetFilteredAccommodations(double longitude, double latitude)
         {
             try
@@ -30,19 +30,19 @@ namespace MSISTORE.WEB.Controllers
                 var locationsMap = _mapService.GetAll();
                 var filteredAccommodations = new List<Location>();
 
-                foreach (var accommodation in locationsMap)
+                foreach (var location in locationsMap)
                 {
                     using (var httpClient = _httpClientFactory.CreateClient())
                     {
-                        Console.Write(accommodation);
-                        var response = await httpClient.GetAsync($"https://dev.virtualearth.net/REST/v1/Routes/Driving?o=json&wp.0={longitude},{latitude}&wp.1={accommodation.Latitude},{accommodation.Longitude}&key={_bingMapsApiKey}");
+                        Console.Write(location);
+                        var response = await httpClient.GetAsync($"https://dev.virtualearth.net/REST/v1/Routes/Driving?o=json&wp.0={longitude},{latitude}&wp.1={location.Latitude},{location.Longitude}&key={_bingMapsApiKey}");
                         response.EnsureSuccessStatusCode();
                         var responseData = await response.Content.ReadAsStringAsync();
                         var data = JsonConvert.DeserializeObject<dynamic>(responseData);
 
                         if (data.resourceSets[0].resources[0].travelDistance < 10)
                         {
-                            filteredAccommodations.Add(accommodation);
+                            filteredAccommodations.Add(location);
                         }
                     }
                 }

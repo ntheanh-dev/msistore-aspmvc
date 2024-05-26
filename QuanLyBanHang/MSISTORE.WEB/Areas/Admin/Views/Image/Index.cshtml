@@ -1,0 +1,47 @@
+﻿@model IEnumerable<DAL.Models.Image>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.File)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Preview)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Prodcut)
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+                <td>
+                    <img src="@item.File" alt="Image" class="image-fuild" style="width: 100px; height: auto;">
+                </td>
+
+            <td>
+                @Html.DisplayFor(modelItem => item.Preview)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Prodcut.Description)
+            </td>
+            <td>
+                  <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                  <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>
