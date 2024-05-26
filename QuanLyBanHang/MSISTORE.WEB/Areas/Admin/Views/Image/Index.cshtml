@@ -1,4 +1,5 @@
 ﻿@model IEnumerable<DAL.Models.Image>
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
 
 @{
     ViewData["Title"] = "Index";
@@ -13,6 +14,7 @@
     <thead>
         <tr>
             <th>
+                
                 @Html.DisplayNameFor(model => model.File)
             </th>
             <th>
@@ -27,10 +29,11 @@
     <tbody>
 @foreach (var item in Model) {
         <tr>
+            <td>
                 <td>
-                    <img src="@item.File" alt="Image" class="image-fuild" style="width: 100px; height: auto;">
+                    <img src="@item.File" alt="Image" style="width:100px;height:auto">
                 </td>
-
+            </td>
             <td>
                 @Html.DisplayFor(modelItem => item.Preview)
             </td>
@@ -38,8 +41,8 @@
                 @Html.DisplayFor(modelItem => item.Prodcut.Description)
             </td>
             <td>
-                  <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                  <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
+                <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
+                <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
             </td>
         </tr>
 }

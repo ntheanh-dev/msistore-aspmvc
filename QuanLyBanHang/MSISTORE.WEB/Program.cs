@@ -1,6 +1,7 @@
 ﻿using AutoMapper;
 using BLL;
 using BLL.Token;
+using CloudinaryDotNet;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
@@ -69,6 +70,18 @@ builder.Services.AddScoped<MapService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+
+
+//Cloudinary
+
+Account cloudinaryCredentials = new Account(
+    builder.Configuration["Cloudinary:CloudName"],
+    builder.Configuration["Cloudinary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiSecret"]);
+
+Cloudinary cloudinary = new Cloudinary(cloudinaryCredentials);
+builder.Services.AddSingleton(cloudinary);
+
 
 var app = builder.Build();
 app.UseCors(MyAllowSpecificOrigins);
