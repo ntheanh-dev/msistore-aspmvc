@@ -111,7 +111,8 @@ namespace DAL
             //        UserId = x.UserId
             //    }).ToList();
             return All.AsQueryable().Where(x => x.UserId == userId)
-                .Include(x => x.Orderitems).ThenInclude(x => x.Prodcut)
+                .Include(x => x.Orderitems).ThenInclude(x => x.Prodcut).ThenInclude(x => x.Feedbacks)
+                .Include(x => x.Orderitems).ThenInclude(oi => oi.Prodcut).ThenInclude(p => p.Images)
                 .Include(x => x.Statusorders)
                 .ToList();
         }
