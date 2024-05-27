@@ -10,27 +10,39 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
     public class ProductController : Controller
     {
         msistoreContext da = new msistoreContext();
-        public IActionResult Index()
+        public ActionResult Index()
         {
-            //var user = HttpContext.Session.GetString("User_admin");
-            //if (string.IsNullOrEmpty(user))
-            //{
-            //    return RedirectToAction("Login");
-            //}
-            //ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+            var user = HttpContext.Session.GetString("User_admin");
+            if (string.IsNullOrEmpty(user))
+            {
+				return RedirectToAction("Login", "Home");
+			}
+            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
             var ds = da.Products.Include(p => p.Brand).Include(p => p.Category).Include(p=> p.Images).OrderByDescending(p => p.Id).ToList();
             return View(ds);
         }
 
         public ActionResult Details(int id)
         {
-            var p = da.Products.Include(p => p.Brand).Include(p => p.Category).Include(p=> p.Images).FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var p = da.Products.Include(p => p.Brand).Include(p => p.Category).Include(p=> p.Images).FirstOrDefault(c => c.Id.Equals(id));
             return View(p);
         }
 
         public ActionResult Create()
         {
-            ViewBag.Brand = da.Brands.ToList();
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			ViewBag.Brand = da.Brands.ToList();
             ViewBag.Category = da.Categories.ToList();
             return View();
         }
@@ -57,7 +69,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            var p = da.Products.Include(p => p.Brand).Include(p => p.Category).FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var p = da.Products.Include(p => p.Brand).Include(p => p.Category).FirstOrDefault(c => c.Id.Equals(id));
             ViewBag.Brand = da.Brands.ToList();
             ViewBag.Category = da.Categories.ToList();
             return View(p);
@@ -88,7 +106,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         }
         public ActionResult Delete(int id)
         {
-            var p = da.Products.FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var p = da.Products.FirstOrDefault(c => c.Id.Equals(id));
             da.Remove(p);
             da.SaveChanges();
             return RedirectToAction("Index");

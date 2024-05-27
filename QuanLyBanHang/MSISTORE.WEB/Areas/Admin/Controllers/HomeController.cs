@@ -11,10 +11,10 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
     public class HomeController : Controller
     {
         msistoreContext da = new msistoreContext();
-        public IActionResult Index()
+        public virtual ActionResult Index()
         {
             var user = HttpContext.Session.GetString("User_admin");
-            if(string.IsNullOrEmpty(user))
+            if (string.IsNullOrEmpty(user))
             {
                 return RedirectToAction("Login");
             }
@@ -22,19 +22,19 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
             return View();
         }
         [HttpGet]
-        public IActionResult Logout()
+        public ActionResult Logout()
         {
             HttpContext.Session.Remove("User_admin");
             return RedirectToAction("Login");
         }
 
-        public IActionResult Login()
+        public ActionResult Login()
         {
             return View();
         }
 
         [HttpPost]
-        public IActionResult Login(LoginModel lgModel)
+        public ActionResult Login(LoginModel lgModel)
         {
             var username = lgModel.Username;
             var password = lgModel.Password;

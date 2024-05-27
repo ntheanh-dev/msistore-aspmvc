@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Newtonsoft.Json;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
 
 namespace MSISTORE.WEB.Areas.Admin.Controllers
@@ -11,7 +12,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         
         public ActionResult Index([FromQuery] string year, [FromQuery] string type)
         {
-			if(!string.IsNullOrEmpty(year) && !string.IsNullOrEmpty(type))
+            var user = HttpContext.Session.GetString("User_admin");
+            if (string.IsNullOrEmpty(user))
+            {
+				return RedirectToAction("Login", "Home");
+			}
+            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+            if (!string.IsNullOrEmpty(year) && !string.IsNullOrEmpty(type))
 			{
 				return GetRs(year,type);
 			}

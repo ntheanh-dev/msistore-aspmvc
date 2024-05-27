@@ -2,34 +2,47 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Newtonsoft.Json;
+using System.Runtime.CompilerServices;
 
 namespace MSISTORE.WEB.Areas.Admin.Controllers
 {
     [Area("Admin")]
-    public class CategoryController : Controller
+    public class CategoryController : HomeController
     {
         msistoreContext da = new msistoreContext();
-        public ActionResult Index()
+        public override ActionResult Index()
         {
-            //var user = HttpContext.Session.GetString("User_admin");
-            //if (string.IsNullOrEmpty(user))
-            //{
-            //    return RedirectToAction("Login");
-            //}
-            //ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+            var user = HttpContext.Session.GetString("User_admin");
+            if (string.IsNullOrEmpty(user))
+            {
+				return RedirectToAction("Login", "Home");
+			}
+            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
             var ds = da.Categories.ToList();
             return View(ds);
         }
 
         public ActionResult Details(int id)
         {
-            var c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
             return View(c);
         }
 
         public ActionResult Create()
         {
-            return View();
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			return View();
         }
 
         [HttpPost]
@@ -52,7 +65,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
 
         public ActionResult Edit(int id)
         {
-            var c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
             return View(c);
         }
 
@@ -73,7 +92,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         }
         public ActionResult Delete(int id)
         {
-            Category c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			Category c = da.Categories.FirstOrDefault(c => c.Id.Equals(id));
             da.Categories.Remove(c);
             da.SaveChanges();
             return RedirectToAction("Index");

@@ -6,6 +6,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MSISTORE.WEB.Areas.Admin.Models;
 using Microsoft.AspNetCore.Mvc.Rendering;
+using Newtonsoft.Json;
 
 namespace MSISTORE.WEB.Areas.Admin.Controllers
 {
@@ -23,6 +24,12 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         // GET: ImageController1
         public ActionResult Index()
         {
+            var user = HttpContext.Session.GetString("User_admin");
+            if (string.IsNullOrEmpty(user))
+            {
+				return RedirectToAction("Login", "Home");
+			}
+            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
             var ds = da.Images.Include(s => s.Prodcut).OrderByDescending(s=>s.Id).ToList();
             return View(ds);
         }
@@ -30,13 +37,25 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         // GET: ImageController1/Details/5
         public ActionResult Details(int id)
         {
-            return View();
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			return View();
         }
 
         // GET: ImageController1/Create
         public ActionResult Create()
         {
-            var productIds = da.Products.Select(p => new { p.Id, p.Name }).ToList();
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var productIds = da.Products.Select(p => new { p.Id, p.Name }).ToList();
             ViewBag.ProductIds = productIds;
             return View();
         }
@@ -81,7 +100,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         // GET: ImageController1/Edit/5
         public ActionResult Edit(int id)
         {
-            return View();
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			return View();
         }
 
         // POST: ImageController1/Edit/5
@@ -102,7 +127,13 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         // GET: ImageController1/Delete/5
         public ActionResult Delete(long id)
         {
-            var image = da.Images.Include(i => i.Prodcut).FirstOrDefault(i => i.Id == id);
+			var user = HttpContext.Session.GetString("User_admin");
+			if (string.IsNullOrEmpty(user))
+			{
+				return RedirectToAction("Login", "Home");
+			}
+			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+			var image = da.Images.Include(i => i.Prodcut).FirstOrDefault(i => i.Id == id);
             if (image == null)
             {
                 return NotFound();
