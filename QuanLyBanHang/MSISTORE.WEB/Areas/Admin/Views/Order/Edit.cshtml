@@ -1,0 +1,86 @@
+﻿@model MSISTORE.WEB.Areas.Admin.Models.OrderRsp
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+
+@{
+	var list = ViewBag.OrderItem;
+	var statusOrder = ViewBag.statusOrder;
+}
+
+<h4>Order</h4>
+<hr />
+<div class="row">
+	<div class="col-md-4">
+		<form asp-action="Edit">
+			<div asp-validation-summary="ModelOnly" class="text-danger"></div>
+			<input type="hidden" asp-for="Id" />
+			<div class="form-group">
+				<label asp-for="CreatedAt" class="control-label"></label>
+				<input asp-for="CreatedAt" class="form-control" disabled />
+				<span asp-validation-for="CreatedAt" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="UpdatedAt" class="control-label"></label>
+				<input asp-for="UpdatedAt" class="form-control" disabled />
+				<span asp-validation-for="UpdatedAt" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="IsActive" class="control-label"></label>
+				<select asp-for="IsActive" class="form-control">
+					<option value="1">True</option>
+					<option value="0">Fasle</option>
+				</select>
+				<span asp-validation-for="IsActive" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="DeliveryStage" class="control-label"></label>
+				<select asp-for="DeliveryStage" class="form-control">
+					<option value="Processing">Processing</option>
+					<option value="Delivered">Delivered</option>
+				</select>
+				<span asp-validation-for="DeliveryStage" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="Uuid" class="control-label"></label>
+				<input asp-for="Uuid" class="form-control" disabled />
+				<span asp-validation-for="Uuid" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<label asp-for="UserId" class="control-label"></label>
+				<input asp-for="UserId" class="form-control" disabled />
+				<span asp-validation-for="UserId" class="text-danger"></span>
+			</div>
+			<div class="form-group">
+				<input type="submit" value="Save" class="btn btn-primary" />
+			</div>
+		</form>
+		<div>
+			<a asp-action="Index">Back to List</a>
+		</div>
+	</div>
+	<div class="col-md-8">
+		<table class="table table-striped">
+			<thead><h3 class="text-center">Chi tiết đơn hàng</h3></thead>
+			<tr>
+				<th>Id</th>
+				<th>Tên sản phẩm</th>
+				<th>Số lượng</th>
+				<th>Đơn giá</th>
+			</tr>
+			@if (list != null)
+			{
+				foreach (var item in list)
+				{
+					<tr>
+						<td>@item.id</td>
+						<td>@item.name</td>
+						<td>@item.quantity</td>
+						<td>@String.Format("{0:#,0}", @item.unit_price) VNĐ</td>
+					</tr>
+				}
+			}
+		</table>
+	</div>
+</div>
+
+
+
