@@ -102,6 +102,8 @@ namespace DAL
 
                     await Context.SaveChangesAsync();
                     await transaction.CommitAsync();
+                    res.Resutls = updateUser;
+                    return res;
                 }
                 catch (Exception ex)
                 {

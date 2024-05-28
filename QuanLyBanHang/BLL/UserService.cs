@@ -115,9 +115,6 @@ namespace BLL
                 return res;
             }
 
-            var mappingUserInstance = _mapper.Map<User>(updateUserReq);
-            var updatedPropertiesNames = CompareChangesHelper.GetDiffPropertiesFrom(mappingUserInstance, existingUser, nameof(User.Id), nameof(User.RoleId));
-
             // Cập nhật thông tin user từ UpdateUserReq
             existingUser.FirstName = updateUserReq.FirstName ?? existingUser.FirstName;
             existingUser.LastName = updateUserReq.LastName ?? existingUser.LastName;
@@ -148,14 +145,10 @@ namespace BLL
             // Gọi phương thức UpdateAsync của UserRepository
             var updateRes = await _userRepository.UpdateAsync(existingUser);
 
-            var dataRes = _mapper.Map<UpdateUserRsp>(existingUser);
-            
-
-            dataRes.FieldsChanged = updatedPropertiesNames;
-
+        
             if (updateRes.Success)
             {
-                res.Resutls = dataRes;
+                res.Resutls = updateUserReq;
             }
             else
             {
