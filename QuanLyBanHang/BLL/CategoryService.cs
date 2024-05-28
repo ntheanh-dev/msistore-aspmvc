@@ -2,11 +2,6 @@
 using DAL.Models;
 using QLBH.Common.BLL;
 using QLBH.Common.Rsp;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 namespace BLL
 {
     public class CategoryService : GenericSvc<CategoryRepository, Category>

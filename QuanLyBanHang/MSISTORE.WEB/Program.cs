@@ -2,7 +2,9 @@
 using BLL;
 using BLL.Token;
 using CloudinaryDotNet;
+using DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
@@ -70,7 +72,8 @@ builder.Services.AddScoped<MapService>();
 builder.Services.AddScoped<OrderService>();
 builder.Services.AddHttpClient();
 builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
-
+builder.Services.AddDbContext<msistoreContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionStrings")));
 
 //Cloudinary
 

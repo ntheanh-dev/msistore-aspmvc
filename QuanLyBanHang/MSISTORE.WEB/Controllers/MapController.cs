@@ -40,7 +40,7 @@ namespace MSISTORE.WEB.Controllers
                         var responseData = await response.Content.ReadAsStringAsync();
                         var data = JsonConvert.DeserializeObject<dynamic>(responseData);
 
-                        if (data.resourceSets[0].resources[0].travelDistance < 10)
+                        if (data.resourceSets[0].resources[0].travelDistance < 1)
                         {
                             filteredAccommodations.Add(location);
                         }

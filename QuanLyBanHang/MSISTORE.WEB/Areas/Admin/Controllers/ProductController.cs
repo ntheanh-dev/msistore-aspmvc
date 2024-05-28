@@ -47,24 +47,29 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
             return View();
         }
 
-        [HttpPost]
-        public ActionResult Create(Product product)
+       [HttpPost]
+public async Task<ActionResult> Create(Product product)
+{
+    try
+    {
+        using (var context = new msistoreContext())
         {
-            try
-            {
-                Product p = new Product();
-                //product.CreatedAt = DateTime.Now;
-                //product.UpdatedAt = DateTime.Now;
-                p = product;
-                da.Products.Add(p);
-                da.SaveChanges();
-                return RedirectToAction("Index");
-            }
-            catch (Exception ex)
-            {
-                return Content(ex.Message);
-            }
+            product.CreatedAt = DateTime.Now.Date;
+            product.UpdatedAt = DateTime.Now.Date;
+
+            context.Products.Add(product);
+            await context.SaveChangesAsync();
         }
+
+        return RedirectToAction("Index");
+    }
+    catch (Exception ex)
+    {
+        return Content($"An error occurred while creating the product: {ex.Message}");
+    }
+}
+
+
 
 
         public ActionResult Edit(int id)
@@ -104,18 +109,49 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
                 return Content(ex.Message);
             }
         }
-        public ActionResult Delete(int id)
+        public  ActionResult Delete(int id)
         {
-			var user = HttpContext.Session.GetString("User_admin");
-			if (string.IsNullOrEmpty(user))
-			{
-				return RedirectToAction("Login", "Home");
-			}
-			ViewBag.User = JsonConvert.DeserializeObject<User>(user);
-			var p = da.Products.FirstOrDefault(c => c.Id.Equals(id));
-            da.Remove(p);
-            da.SaveChanges();
-            return RedirectToAction("Index");
+            var user = HttpContext.Session.GetString("User_admin");
+            if (string.IsNullOrEmpty(user))
+            {
+                return RedirectToAction("Login", "Home");
+            }
+
+            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
+
+            using (var context = new msistoreContext())
+            {
+                using (var transaction = context.Database.BeginTransaction())
+                {
+                    try
+                    {
+                        var product = context.Products
+                            .Include(p => p.Images)
+                            .FirstOrDefault(p => p.Id == id);
+
+                        if (product == null)
+                        {
+                            return NotFound("Product not found.");
+                        }
+
+                         context.Images.RemoveRange(product.Images);
+
+                         context.Products.Remove(product);
+
+                         context.SaveChangesAsync();
+
+                         transaction.CommitAsync();
+
+                        return RedirectToAction("Index");
+                    }
+                    catch (Exception ex)
+                    {
+                        transaction.RollbackAsync();
+                        throw ex;
+                    }
+                }
+            }
         }
+
     }
 }
