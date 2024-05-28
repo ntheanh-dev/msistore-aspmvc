@@ -3,7 +3,7 @@ using System.Collections.Generic;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class msistoreContext : DbContext
     {
@@ -63,24 +63,11 @@ namespace DAL.Models
             {
                 entity.ToTable("Exchange", "msistoredb");
 
-                entity.Property(e => e.CreatedAt).HasColumnName("createdAt");
-
-                entity.Property(e => e.Reason).HasMaxLength(200);
-
-                entity.Property(e => e.Status).HasMaxLength(50);
-
-                entity.Property(e => e.UpdatedAt).HasColumnName("updatedAt");
-
                 entity.HasOne(d => d.OrderItem)
                     .WithMany(p => p.Exchanges)
                     .HasForeignKey(d => d.OrderItemId)
                     .OnDelete(DeleteBehavior.ClientSetNull)
                     .HasConstraintName("FK_OrderItem_Exchange");
-
-                entity.HasOne(d => d.User)
-                    .WithMany(p => p.Exchanges)
-                    .HasForeignKey(d => d.UserId)
-                    .HasConstraintName("FK_User_Exchange");
             });
 
             modelBuilder.Entity<Feedback>(entity =>
