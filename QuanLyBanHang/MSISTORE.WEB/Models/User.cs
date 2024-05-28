@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace DAL.Models
+namespace MSISTORE.WEB.Models
 {
     public partial class User
     {
         public User()
         {
-            Exchanges = new HashSet<Exchange>();
             Feedbacks = new HashSet<Feedback>();
         }
 
@@ -24,7 +23,6 @@ namespace DAL.Models
 
         public virtual Role Role { get; set; } = null!;
         public virtual Userinfo? Userinfo { get; set; }
-        public virtual ICollection<Exchange> Exchanges { get; set; }
         public virtual ICollection<Feedback> Feedbacks { get; set; }
     }
 }
