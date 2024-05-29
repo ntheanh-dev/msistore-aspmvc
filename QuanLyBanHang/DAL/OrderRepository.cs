@@ -1,10 +1,7 @@
-﻿using CloudinaryDotNet.Actions;
-using Common.Req.OrderReq;
-using Common.Rsp;
+﻿using Common.Req.OrderReq;
 using DAL.Models;
 using Microsoft.EntityFrameworkCore;
 using QLBH.Common.DAL;
-using QLBH.Common.Rsp;
 
 namespace DAL
 {
@@ -45,6 +42,7 @@ namespace DAL
                                 User = user,
                                 CreatedAt = DateTime.UtcNow,
                                 UpdatedAt = DateTime.UtcNow,
+                                IsActive = 1,
                                 Uuid = Guid.NewGuid().ToString().Substring(0, 30),
                                 Orderitems = new List<Orderitem>()
                             };

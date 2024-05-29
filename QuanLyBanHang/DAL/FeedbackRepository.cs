@@ -23,7 +23,17 @@ namespace DAL
                     {
                         var user = await context.Users.FindAsync(userId);
                         var product = await context.Products.FindAsync(feedback.ProductId);
-                        var order = await context.Orders.FindAsync(feedback.OrderId);
+                        var order = await context.Orders
+                        .Include(_ => _.Statusorders)
+                        .FirstOrDefaultAsync(o => o.Id == feedback.OrderId);
+                        var allOrdersDelivered = order.Statusorders.All(s => s.DeliveryStage == "Delivered");
+
+
+                        if (!allOrdersDelivered)
+                        {
+                            throw new Exception("The order must be delivered before leaving feedback");
+                        }
+
 
                         if (user == null)
                         {

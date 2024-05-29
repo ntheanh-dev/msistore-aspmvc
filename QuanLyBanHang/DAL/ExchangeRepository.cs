@@ -25,10 +25,8 @@ namespace DAL
                         {
                             throw new Exception("Không tìm thấy món hàng hoặc người dùng không có quyền đổi trả món hàng này.");
                         }
-                        var latestStatus = orderItem.Order.Statusorders
-                            .OrderByDescending(s => s.UpdatedAt) // Assuming there's an UpdatedAt field to determine the latest status
-                            .FirstOrDefault();
-                        if(latestStatus == null || latestStatus.DeliveryStage != "Delivered") {
+                        var latestStatus = orderItem.Order.Statusorders.All(s=> s.DeliveryStage == "Delivered");
+                        if(!latestStatus) {
 
                             throw new Exception("Chỉ có thể đổi trả những đơn hàng đã được giao.");
                         }

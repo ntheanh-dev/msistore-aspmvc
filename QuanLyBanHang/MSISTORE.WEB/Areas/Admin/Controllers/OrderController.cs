@@ -1,5 +1,6 @@
 ﻿using DAL.Models;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MSISTORE.WEB.Areas.Admin.Models;
 using Newtonsoft.Json;
 
@@ -16,8 +17,7 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
             {
                 return RedirectToAction("Login", "Home");
             }
-            ViewBag.User = JsonConvert.DeserializeObject<User>(user);
-            var os = da.Orders.ToList();
+            var os = da.Orders.Include(o=> o.Statusorders).Include(_ => _.User).ThenInclude(_ =>_.User).ToList();
             return View(os);
 		}
         public ActionResult Edit(int id)
@@ -54,11 +54,23 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
         {
             try
             {
-                var status = da.Statusorders.FirstOrDefault(s => s.OrderId.Equals(id));
-                var o = da.Orders.FirstOrDefault(o => o.Id.Equals(id));
-                o.IsActive = short.Parse(collection["IsActive"]);
-                status.DeliveryStage = collection["DeliveryStage"];
+                var order = da.Orders.FirstOrDefault(o => o.Id.Equals(id));
+                if (order == null)
+                {
+                    throw new Exception("Not Found");
+                }
+
+                order.IsActive = short.Parse(collection["IsActive"]);
+
+                var statuses = da.Statusorders.Where(s => s.OrderId.Equals(id)).ToList();
+
+                foreach (var status in statuses)
+                {
+                    status.DeliveryStage = collection["DeliveryStage"];
+                }
+
                 da.SaveChanges();
+
                 return RedirectToAction("Index");
             }
             catch (Exception ex)
@@ -66,5 +78,6 @@ namespace MSISTORE.WEB.Areas.Admin.Controllers
                 return Content(ex.Message);
             }
         }
-	}
+
+    }
 }

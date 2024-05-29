@@ -17,8 +17,12 @@
             <th>
                 @Html.DisplayNameFor(model => model.Uuid)
             </th>
+
             <th>
-                @Html.DisplayNameFor(model => model.User)
+                Name Customer
+            </th>
+            <th>
+                Delivery Stages 
             </th>
             <th></th>
         </tr>
@@ -45,9 +49,28 @@
             <td>
                 @Html.DisplayFor(modelItem => item.Uuid)
             </td>
-            <td>
-                    @Html.DisplayFor(modelItem => item.User.UserId)
-            </td>
+           
+                <td>
+                    @if (item.User != null)
+                    {
+                        @item.User.User.FirstName @item.User.User.LastName
+                    }
+                    else
+                    {
+                        <text>No User</text>
+                    }
+                </td>
+
+                <td>
+                    @if (item.Statusorders.Any())
+                    {
+                        @item.Statusorders.FirstOrDefault().DeliveryStage
+                    }
+                    else
+                    {
+                        <text>No Delivery Stage</text>
+                    }
+                </td>
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a>
             </td>
