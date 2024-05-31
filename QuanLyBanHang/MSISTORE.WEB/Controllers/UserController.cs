@@ -1,7 +1,7 @@
 ﻿using AutoMapper;
 using BLL;
 using BLL.DTOs;
-using Common.Req;
+using Common.Req.UserRequest;
 using Common.Rsp;
 using DAL;
 using DAL.Models;
@@ -15,23 +15,24 @@ namespace MSISTORE.WEB.Controllers
     {
        private readonly UserService _userService;
 
-
-        
-
         public UserController(IConfiguration configuration, IMapper mapper) {
             _userService = new UserService(configuration, mapper);
         }
         [HttpPost("create-user")]
         public async Task<IActionResult> CreateUser([FromForm] UserReq userReq)
         {
-            return Ok(await _userService.CreateUserAsync(userReq));
+            var res = await _userService.CreateUserAsync(userReq);
+            return Ok(res);
         }
+
         [HttpPost("Login")]
         public async Task<IActionResult> LoginUser([FromBody] LoginReq loginReq)
         {
             var res = await _userService.AuthenticateJWTAsync(loginReq);
             return Ok(res.Resutls);
         }
+
+
         [HttpGet("current-user")]
         [Authorize]
         public async Task<IActionResult> GetCurrentUser()
@@ -42,22 +43,42 @@ namespace MSISTORE.WEB.Controllers
                 return Unauthorized();
             }
 
-            var user = await _userService.GetUserByUsernameAsync(username); // Sử dụng phương thức bất đồng bộ
+            var user = await _userService.GetUserByUsernameAsync(username); 
             if (user == null)
             {
                 return NotFound();
             }
 
             var userDto = new UserRsp { 
-                Username = username,
+                Id = user.Id,
+                Fristname = user.FirstName,
+                Lastname = user.LastName,
+                Username = user.Username,
                 Email = user.Email,
                 avatar = user.Avatar,
             };
             return Ok(userDto);
         }
-        public IActionResult Index()
+        [HttpPatch("{userId:long}/update-user")]
+        [Authorize]
+        public async Task<IActionResult> UpdateUser(long userId, [FromForm] UpdateUserReq updateReq)
         {
-            return View();
+            var jwtUserId = User.FindFirst(ClaimTypes.NameIdentifier)?.Value;
+
+            if (string.IsNullOrEmpty(jwtUserId) || userId != long.Parse(jwtUserId))
+            {
+                return Unauthorized("You are not authorized to update this user.");
+            }
+
+            var res = await _userService.UpdateUserAsync(userId, updateReq);
+
+            if (res.Success)
+            {
+                return Ok(res.Resutls);
+            }
+
+            return BadRequest(res.Message);
         }
+
     }
 }

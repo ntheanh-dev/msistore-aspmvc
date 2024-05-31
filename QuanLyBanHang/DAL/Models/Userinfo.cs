@@ -7,7 +7,6 @@ namespace DAL.Models
     {
         public Userinfo()
         {
-            Likes = new HashSet<Like>();
             Orders = new HashSet<Order>();
         }
 
@@ -19,7 +18,6 @@ namespace DAL.Models
         public long UserId { get; set; }
 
         public virtual User User { get; set; } = null!;
-        public virtual ICollection<Like> Likes { get; set; }
         public virtual ICollection<Order> Orders { get; set; }
     }
 }

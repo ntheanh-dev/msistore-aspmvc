@@ -1,0 +1,65 @@
+﻿@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+@{
+	var current_user = ViewBag.User;
+}
+<!DOCTYPE html>
+
+<html>
+<head>
+	<meta name="viewport" content="width=device-width" />
+	<title>@ViewBag.Title</title>
+	<link href="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-EVSTQN3/azprG1Anm3QDgpJLIm9Nao0Yz1ztcQTwFspd3yD65VohhpuuCOmLASjC" crossorigin="anonymous">
+	<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.0.2/dist/js/bootstrap.bundle.min.js" integrity="sha384-MrcW6ZMFYlzcLA8Nl+NtUVF0sA7MsXsP1UyJoMp4YLEuNSfAP+JcXn/tWtIaxVXM" crossorigin="anonymous"></script>
+</head>
+<body>
+	<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		<div class="container-fluid">
+			<a class="navbar-brand" href="#">Quản trị sản phẩm</a>
+			<button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#collapsibleNavbar">
+				<span class="navbar-toggler-icon"></span>
+			</button>
+			<div class="collapse navbar-collapse" id="collapsibleNavbar">
+				<ul class="navbar-nav">
+					@if (current_user != null)
+					{
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Index">Home</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Category" asp-action="Index">Category</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Product" asp-action="Index">Product</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Brand" asp-action="Index">Brand</a>
+						</li>
+						<li class="nav-item">
+
+							<a class="nav-link" asp-area="Admin" asp-controller="Image" asp-action="Index">Image</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Order" asp-action="Index">Order</a>
+						</li>
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Stats" asp-action="Index">Stats</a>
+						</li
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Logout">Logout</a>
+						</li>
+					}
+					else
+					{
+						<li class="nav-item">
+							<a class="nav-link" asp-area="Admin" asp-controller="Home" asp-action="Login">Login</a>
+						</li>
+					}
+				</ul>
+			</div>
+		</div>
+	</nav>
+	<div class="container">
+		@RenderBody()
+	</div>
+</body>
+</html>

@@ -1,4 +1,5 @@
-﻿using BLL;
+﻿using AutoMapper;
+using BLL;
 using Common.Req;
 using DAL.Models;
 using Microsoft.AspNetCore.Http;
@@ -8,15 +9,15 @@ using QLBH.Common.Rsp;
 
 namespace MSISTORE.WEB.Controllers
 {
-    [Route("api/producs")]
+    [Route("api/products")]
     [ApiController]
     public class ProductController : ControllerBase
     {
         private ProductService productService;
-
-        public ProductController()
+        public ProductController(IMapper mapper)
         {
-            this.productService = new ProductService();
+            this.productService = new ProductService(mapper);
+
         }
         [HttpPost("create-product")]
         public IActionResult CreaetProduct([FromBody] ProductRequest productRequest)
@@ -28,10 +29,16 @@ namespace MSISTORE.WEB.Controllers
         [HttpGet("")]
         public IActionResult SearchProduct([FromQuery] SearchProductReq searchProductReq)
         {
-            var lastRecord = productService.GetLastRecord();
-            Console.WriteLine("Last record: " + lastRecord.Id.ToString());
+            //var lastRecord = productService.GetLastRecord();
+            //Console.WriteLine("Last record: " + lastRecord.Id.ToString());
 
             var res = productService.Search(searchProductReq);
+            return Ok(res);
+        }
+        [HttpGet("{id}")]
+        public IActionResult GetProduct(int id)
+        {
+            var res = productService.GetProductById(id);
             return Ok(res);
         }
     }

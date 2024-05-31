@@ -1,18 +1,39 @@
 ﻿using AutoMapper;
 using BLL;
+using BLL.Token;
+using CloudinaryDotNet;
+using DAL.Models;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using System.Text.Json.Serialization;
 
 var MyAllowSpecificOrigins = "_myAllowSpecificOrigins";
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
-builder.Services.AddControllers();
+builder.Services.AddControllers().AddJsonOptions(options =>
+{
+    options.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles;
+    options.JsonSerializerOptions.WriteIndented = true;
+});
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 builder.Services.AddBLLServices(); // Đảm bảo rằng phương thức này đăng ký các dịch vụ BLL cần thiết
+builder.Services.AddMvc();
+builder.Services.AddControllersWithViews();
+
+//session
+builder.Services.AddSession(options =>
+{
+    options.Cookie.IsEssential = true; // Đảm bảo rằng cookie session được xem là bắt buộc
+    options.Cookie.HttpOnly = true; // Không cho phép script JavaScript truy cập cookie session
+    options.Cookie.SameSite = SameSiteMode.Strict; // Xác định cách thức cookie session được gửi đến các trang web khác
+    options.Cookie.SecurePolicy = CookieSecurePolicy.Always; // Sử dụng HTTPS để gửi cookie session
+    options.IdleTimeout = TimeSpan.FromSeconds(300); // Đặt thời gian timeout cho session là 300 giây (5 phút)
+});
 
 //Cors 
 builder.Services.AddCors(options =>
@@ -45,14 +66,35 @@ builder.Services.AddAuthentication(options =>
     };
 });
 
-builder.Services.AddScoped<UserService>(); 
-builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies()); 
+builder.Services.AddScoped<UserService>();
+builder.Services.AddScoped<TokenService>();
+builder.Services.AddScoped<MapService>();
+builder.Services.AddScoped<OrderService>();
+builder.Services.AddHttpClient();
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
+builder.Services.AddDbContext<msistoreContext>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("ConnectionStrings")));
+
+//Cloudinary
+
+Account cloudinaryCredentials = new Account(
+    builder.Configuration["Cloudinary:CloudName"],
+    builder.Configuration["Cloudinary:ApiKey"],
+    builder.Configuration["Cloudinary:ApiSecret"]);
+
+Cloudinary cloudinary = new Cloudinary(cloudinaryCredentials);
+builder.Services.AddSingleton(cloudinary);
+
 
 var app = builder.Build();
+app.UseCors(MyAllowSpecificOrigins);
 
-// Sử dụng xác thực và ủy quyền
+//Sử dụng xác thực và ủy quyền
 app.UseAuthentication();
+app.UseRouting();
+app.UseSession();
 app.UseAuthorization();
+
 
 // Configure the HTTP request pipeline.
 if (app.Environment.IsDevelopment())
@@ -61,9 +103,20 @@ if (app.Environment.IsDevelopment())
     app.UseSwaggerUI();
 }
 
+
+
+app.UseEndpoints(endpoints =>
+{
+    endpoints.MapControllerRoute(
+      name: "Admin",
+      pattern: "{area:exists}/{controller}/{action}/"
+    );
+});
+
 app.UseCors(MyAllowSpecificOrigins);
 
 app.UseHttpsRedirection();
+
 
 app.MapControllers();
 app.Run();

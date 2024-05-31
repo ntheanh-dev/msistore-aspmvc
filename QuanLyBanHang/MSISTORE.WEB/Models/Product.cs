@@ -7,13 +7,13 @@ namespace MSISTORE.WEB.Models
     {
         public Product()
         {
+            Feedbacks = new HashSet<Feedback>();
             Images = new HashSet<Image>();
-            Likes = new HashSet<Like>();
-            OrderItems = new HashSet<OrderItem>();
+            Orderitems = new HashSet<Orderitem>();
         }
 
         public long Id { get; set; }
-        public DateTime CreateAt { get; set; }
+        public DateTime CreatedAt { get; set; }
         public DateTime UpdatedAt { get; set; }
         public short IsActive { get; set; }
         public string Name { get; set; } = null!;
@@ -26,8 +26,8 @@ namespace MSISTORE.WEB.Models
 
         public virtual Brand? Brand { get; set; }
         public virtual Category Category { get; set; } = null!;
+        public virtual ICollection<Feedback> Feedbacks { get; set; }
         public virtual ICollection<Image> Images { get; set; }
-        public virtual ICollection<Like> Likes { get; set; }
-        public virtual ICollection<OrderItem> OrderItems { get; set; }
+        public virtual ICollection<Orderitem> Orderitems { get; set; }
     }
 }

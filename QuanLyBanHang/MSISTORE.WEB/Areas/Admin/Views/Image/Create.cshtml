@@ -1,0 +1,38 @@
+﻿@model MSISTORE.WEB.Areas.Admin.Models.ImageModel
+@addTagHelper *, Microsoft.AspNetCore.Mvc.TagHelpers
+<h4>Image</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Create" enctype="multipart/form-data">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <div class="form-group">
+                <label asp-for="File" class="control-label">File</label>
+                <input asp-for="File" type="file" class="form-control" />
+                <span asp-validation-for="File" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Preview" class="control-label">Preview</label>
+                <input asp-for="Preview" class="form-control" />
+                <span asp-validation-for="Preview" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="ProductId" class="control-label">Product</label>
+                <select asp-for="ProductId" class="form-control">
+                    @foreach (var product in ViewBag.ProductIds)
+                    {
+                        <option value="@product.Id">@product.Name</option>
+                    }
+                </select>
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="form-group mt-2">
+                <input type="submit" value="Create" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Back to List</a>
+</div>
